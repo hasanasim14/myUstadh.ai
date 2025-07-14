@@ -2,7 +2,7 @@
   display: flex;
   gap: 40px; /* increased from 24px */
   margin-left: auto;
-  margin-right: 50px;/* shifts the entire group to the right */
+  margin-right: 50px; /* shifts the entire group to the right */
 }
 
 .navlink {
