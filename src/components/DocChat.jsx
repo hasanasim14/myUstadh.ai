@@ -1,18 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FaUser, FaRobot, FaMicrophone } from 'react-icons/fa';
-import { Pin, Headphones, Send } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
-import './DocChat.css';
+import React, { useState, useEffect, useRef } from "react";
+import { FaUser, FaRobot, FaMicrophone } from "react-icons/fa";
+import { Pin, Headphones, Send } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import "./DocChat.css";
 
 const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
   const initialBotMessage = {
-    from: 'bot',
+    from: "bot",
     text: "Hi there! I'm StudyBot, your AI study assistant. How can I help you today?",
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    time: new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
   };
 
   const [messages, setMessages] = useState([initialBotMessage]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [clickedIndex, setClickedIndex] = useState(null);
   const [playingIndex, setPlayingIndex] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -21,6 +24,8 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const streamRef = useRef(null);
+
+  const endpoint = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     setMessages([initialBotMessage]);
@@ -70,19 +75,21 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
 
   const toggleRecording = async () => {
     if (isRecording) {
-      if (mediaRecorderRef.current?.state === 'recording') {
+      if (mediaRecorderRef.current?.state === "recording") {
         mediaRecorderRef.current.stop();
       }
 
       if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current.getTracks().forEach((track) => track.stop());
         streamRef.current = null;
       }
 
       setIsRecording(false);
     } else {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
         streamRef.current = stream;
 
         const mediaRecorder = new MediaRecorder(stream);
@@ -94,27 +101,29 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
         };
 
         mediaRecorder.onstop = async () => {
-          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+          const audioBlob = new Blob(audioChunksRef.current, {
+            type: "audio/webm",
+          });
           const formData = new FormData();
-          formData.append('audio', audioBlob, 'recording.webm');
+          formData.append("audio", audioBlob, "recording.webm");
 
           try {
-            const response = await fetch('http://127.0.0.1:8000/transcribe', {
-              method: 'POST',
+            const response = await fetch(`${endpoint}/transcribe`, {
+              method: "POST",
               body: formData,
             });
 
             const data = await response.json();
             setInput(data.transcription);
           } catch (error) {
-            console.error('Transcription failed:', error);
+            console.error("Transcription failed:", error);
           }
         };
 
         mediaRecorder.start();
         setIsRecording(true);
       } catch (err) {
-        console.error('Microphone access denied or not available', err);
+        console.error("Microphone access denied or not available", err);
       }
     }
   };
@@ -123,10 +132,13 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
     const userInput = customInput || input;
     if (!userInput.trim()) return;
 
-    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const userMessage = { from: 'user', text: userInput, time };
+    const time = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const userMessage = { from: "user", text: userInput, time };
     const loadingMessage = {
-      from: 'bot',
+      from: "bot",
       text: (
         <div className="typing-dots">
           <div className="typing-dot"></div>
@@ -134,17 +146,17 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
           <div className="typing-dot"></div>
         </div>
       ),
-      time: ''
+      time: "",
     };
 
-    setMessages(prev => [...prev, userMessage, loadingMessage]);
-    setInput('');
+    setMessages((prev) => [...prev, userMessage, loadingMessage]);
+    setInput("");
 
     try {
       const conversationHistory = [];
       for (let i = 0; i < messages.length; i++) {
         const msg = messages[i];
-        if (msg.from === 'user' && messages[i + 1]?.from === 'bot') {
+        if (msg.from === "user" && messages[i + 1]?.from === "bot") {
           conversationHistory.push({
             question: msg.text,
             answer: messages[i + 1].text,
@@ -155,7 +167,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
 
       conversationHistory.push({
         question: userInput,
-        answer: null
+        answer: null,
       });
 
       const payload = {
@@ -173,42 +185,51 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
       let response;
 
       if (!selectedDocs || selectedDocs.length === 0) {
-
-        response = await fetch('http://127.0.0.1:8000/ask', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+        response = await fetch(`${endpoint}/ask`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
         });
       } else {
         console.log("Selected Docs being sent:", selectedDocs);
-        response = await fetch('http://127.0.0.1:8000/query_with_filter', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(filterpayload)
+        response = await fetch(`${endpoint}/query_with_filter`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(filterpayload),
         });
       }
 
       const data = await response.json();
 
-      const botReply = data?.reply || "Thanks for your message! I am working on it.";
-      const botTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const botReply =
+        data?.reply || "Thanks for your message! I am working on it.";
+      const botTime = new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
 
-      setMessages(prev => {
+      setMessages((prev) => {
         const updated = [...prev];
         updated.pop();
-        return [...updated, { from: 'bot', text: botReply, time: botTime }];
+        return [...updated, { from: "bot", text: botReply, time: botTime }];
       });
     } catch (error) {
       console.error("API error:", error);
-      const botTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      setMessages(prev => {
+      const botTime = new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      setMessages((prev) => {
         const updated = [...prev];
         updated.pop();
-        return [...updated, {
-          from: 'bot',
-          text: "Sorry, something went wrong while processing your question.",
-          time: botTime,
-        }];
+        return [
+          ...updated,
+          {
+            from: "bot",
+            text: "Sorry, something went wrong while processing your question.",
+            time: botTime,
+          },
+        ];
       });
     }
   };
@@ -219,47 +240,67 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
         {messages.map((msg, index) => (
           <div key={index} className={`message-container ${msg.from}`}>
             <div className="message-icon">
-              {msg.from === 'user' ? <FaUser size={16} /> : <FaRobot size={16} />}
+              {msg.from === "user" ? (
+                <FaUser size={16} />
+              ) : (
+                <FaRobot size={16} />
+              )}
             </div>
             <div className="bubble-timestamp">
               <div className={`message ${msg.from}`}>
-                {typeof msg.text === 'string' ? (
+                {typeof msg.text === "string" ? (
                   <ReactMarkdown
                     components={{
-                      a: ({ node, ...props }) => <a {...props} target="_blank" rel="noopener noreferrer" />
+                      a: ({ node, ...props }) => (
+                        <a
+                          {...props}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        />
+                      ),
                     }}
                   >
                     {msg.text}
                   </ReactMarkdown>
-                ) : msg.text}
+                ) : (
+                  msg.text
+                )}
               </div>
               <div className="timestamp">
                 {msg.time}
-                {msg.from === 'bot' && msg.text !== initialBotMessage.text && (
+                {msg.from === "bot" && msg.text !== initialBotMessage.text && (
                   <>
                     <Pin
                       size={12}
-                      style={{ marginLeft: '18px', verticalAlign: 'middle', cursor: 'pointer' }}
+                      style={{
+                        marginLeft: "18px",
+                        verticalAlign: "middle",
+                        cursor: "pointer",
+                      }}
                       title="Pin this response"
                       onClick={() => {
-                        const userQuestion = messages[index - 1]?.from === 'user' ? messages[index - 1].text : 'Unknown Question';
-                        const botAnswer = typeof msg.text === 'string' ? msg.text : '';
+                        const userQuestion =
+                          messages[index - 1]?.from === "user"
+                            ? messages[index - 1].text
+                            : "Unknown Question";
+                        const botAnswer =
+                          typeof msg.text === "string" ? msg.text : "";
                         onPinNote(userQuestion, botAnswer);
                       }}
                     />
                     <Headphones
                       size={12}
                       style={{
-                        marginLeft: '16px',
-                        verticalAlign: 'middle',
-                        cursor: 'pointer',
+                        marginLeft: "16px",
+                        verticalAlign: "middle",
+                        cursor: "pointer",
                         color:
                           clickedIndex === index
-                            ? 'red'
+                            ? "red"
                             : playingIndex === index
-                              ? 'green'
-                              : 'black',
-                        outline: 'none',
+                            ? "green"
+                            : "black",
+                        outline: "none",
                       }}
                       title="Listen to this response"
                       onClick={() => playNoteAudioFromAPI(msg.text, index)}
@@ -278,7 +319,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') {
+            if (e.key === "Enter") {
               sendMessage();
             }
           }}
@@ -287,8 +328,8 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
         <div
           className="mic-icon"
           onClick={toggleRecording}
-          style={{ color: isRecording ? 'green' : 'black', cursor: 'pointer' }}
-          title={isRecording ? 'Stop Recording' : 'Start Recording'}
+          style={{ color: isRecording ? "green" : "black", cursor: "pointer" }}
+          title={isRecording ? "Stop Recording" : "Start Recording"}
         >
           <FaMicrophone size={18} />
         </div>
