@@ -1,0 +1,17 @@
+/* .card-layout {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0px;
+  gap: 0px;
+} */
+.card-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  height: calc(100vh - 100px); /* 50px top + 50px bottom spacing */
+  margin-top: 66px;
+  margin-bottom: 30px;
+  width: 99vw;                /* FULL WIDTH of viewport */
+  gap: 8px;
+  padding: 0 7px; /* Optional horizontal padding */
+}

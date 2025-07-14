@@ -1,0 +1,28 @@
+/* Reset some defaults */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  background-color: white;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: #f0f4f8;
+}
+body {
+  background-color: #f0f4f8;
+  height: 100%;
+    scroll-padding-top: 100px; /* applies scroll offset to all anchor scrolls */
+
+}
+
