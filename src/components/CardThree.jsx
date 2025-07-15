@@ -30,7 +30,7 @@ const CardThree = ({ notes, setNotes, selectedDocs }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/generate-mindmap",
+        `${endpoint}/generate-mindmap`,
         {
           selectedDocs: selectedDocs,
         }
@@ -74,7 +74,7 @@ const CardThree = ({ notes, setNotes, selectedDocs }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/generate-audio/", {
+      const response = await fetch(`${endpoint}/generate-audio/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
@@ -261,7 +261,7 @@ const CardThree = ({ notes, setNotes, selectedDocs }) => {
         <AudioOverview selectedDocs={selectedDocs} />
 
         <div className="notes-section">
-          <span className="section-title">Notes</span>
+          <span className="section-title"  style={{fontSize: "13px"}}>Notes</span>
           <button className="add-note" onClick={handleAddNote}>
             + Add note
           </button>

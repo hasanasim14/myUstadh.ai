@@ -1,17 +1,33 @@
 /* .card-layout {
   display: flex;
   justify-content: space-between;
-  margin: 5px 0px;
-  gap: 0px;
-} */
-.card-layout {
-  display: flex;
-  justify-content: space-between;
   align-items: stretch;
-  height: calc(100vh - 100px); /* 50px top + 50px bottom spacing */
+  height: calc(100vh - 100px); 
   margin-top: 66px;
   margin-bottom: 30px;
-  width: 99vw;                /* FULL WIDTH of viewport */
+  width: 99vw;               
   gap: 8px;
-  padding: 0 7px; /* Optional horizontal padding */
+  padding: 0 7px; 
+} */
+
+.card-layout {
+  display: flex;
+  flex-wrap: wrap;              /* 🔁 Allow wrapping on small screens */
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 12px;
+
+  width: 100%;
+  max-width: 1400px;            /* ✅ Keeps it centered and not too wide */
+  margin: 66px auto 30px auto;  /* Top + bottom spacing, center horizontally */
+  padding: 0 16px;              /* More generous horizontal padding */
+
+  height: auto; /* 📱 Let height grow naturally for small screens */
+}
+
+/* Optional: Restrict max height only for large screens */
+@media (min-width: 1024px) {
+  .card-layout {
+    height: calc(100vh - 100px);
+  }
 }

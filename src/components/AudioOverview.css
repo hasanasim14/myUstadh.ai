@@ -1,4 +1,4 @@
-.spinner {
+/* .spinner {
   border: 4px solid #f3f3f3;
   border-top: 4px solid #7d868c;
   border-radius: 50%;
@@ -12,7 +12,6 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Optional - styling for the button and layout */
 .load-box {
   display: flex;
   flex-direction: row;
@@ -33,8 +32,8 @@
   border-radius: 4px;
   font-size: 14px;
   cursor: pointer;
-  width: 100px; /* fix button width */
-  height: 36px;  /* fix button height */
+  width: 100px;
+  height: 36px;  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,4 +59,79 @@
   align-items: center;
   font-weight: 600;
   margin-bottom: 10px;
+} */
+
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #7d868c;
+  border-radius: 50%;
+  width: clamp(14px, 2vw, 18px);
+  height: clamp(14px, 2vw, 18px);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.load-box {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap; /* ❗ prevent wrapping by default */
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  width: 100%;
+}
+
+/* Ensure text doesn't shrink too much */
+.load-text {
+  flex-grow: 1;
+  flex-shrink: 1;
+  font-size: clamp(13px, 2vw, 14px);
+  white-space: nowrap; /* Optional: keep on one line */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+/* Button styling */
+.load-button {
+  flex-shrink: 0;
+  padding: 6px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: clamp(13px, 2vw, 14px);
+  cursor: pointer;
+  width: clamp(80px, 25vw, 100px);
+  height: clamp(32px, 5vw, 36px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.load-button:disabled {
+  background-color: #5e85a8;
+  cursor: not-allowed;
+}
+
+/* In case of super small screens */
+@media (max-width: 400px) {
+  .load-box {
+    flex-wrap: wrap;
+  }
+
+  .load-text {
+    margin-bottom: 6px;
+    width: 100%;
+  }
+
+  .load-button {
+    width: 100%;
+  }
 }

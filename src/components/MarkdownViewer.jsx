@@ -242,6 +242,7 @@ function MarkdownViewer() {
   const location = useLocation();
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
+  const endpoint = import.meta.env.VITE_API_URL;
 
 
   useEffect(() => {
@@ -281,7 +282,7 @@ function MarkdownViewer() {
     if (chunkId) {
       const actualSourceName = SOURCE_MAP[bookSlug] || bookSlug;
 
-      const apiRes = await fetch("http://localhost:8000/getchunk", {
+      const apiRes = await fetch(`${endpoint}/getchunk`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ source: actualSourceName, chunkid: chunkId }),

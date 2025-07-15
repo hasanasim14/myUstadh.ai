@@ -1,4 +1,4 @@
-
+/* 
 .card-one {
   background-color: #ffffff;
   padding: 0px;
@@ -48,7 +48,7 @@
   color: #111827;
 }
 .module-name {
-  font-size: 13px; /* ↓ Decrease this value as needed */
+  font-size: 13px; 
   font-weight: 600;
   margin-left: 5px;
 }
@@ -98,8 +98,8 @@
 .doc-icon {
   color: #6366f1;
   font-size: 16px;
-  min-width: 16px; /* <-- Prevents shifting on longer labels */
-  height: 16px;     /* <-- Forces same icon height */
+  min-width: 16px; 
+  height: 16px;     
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,50 +131,6 @@
 .extra-link:hover {
   color: #1d4ed8;
 }
-/* .doc-content {
-  max-height: 73.5vh; 
-  overflow-y: auto; 
-  padding-right: 10px; 
-  line-height: 1.6;
-  font-size: 16px;
-} */
-
- /* .doc-content {
-  max-height: 73.5vh;
-  overflow-y: auto;
-  padding-right: 10px;
-  line-height: 1.6;
-  font-size: 16px;
-  max-width: 100%;
-  word-wrap: break-word;  
-  overflow-wrap: break-word;
-} */
-
-/* .doc-content h1 { 
-  font-size: 24px;
-}
-
-.doc-content h2 {
-  font-size: 20px;
-}
-
-.doc-content h3 {
-  font-size: 18px;
-}
-
-.doc-content p {
-  font-size: 16px; 
-}
-  
-.opened-doc-full {
-  display: flex;
-  flex-direction: column;
-  max-height: 80vh; 
-  overflow: hidden;
-  padding: 5px;
-  background-color: #fff;
-  border-radius: 8px;
-} */
 
 .doc-content {
   max-height: 73.5vh;
@@ -190,7 +146,6 @@
   overflow-wrap: break-word;
 }
 
-/* Constrain content width and center */
 .doc-content > * {
   max-width: 700px;
   margin-left: auto;
@@ -199,7 +154,6 @@
   padding-right: 12px;
 }
 
-/* Headings */
 .doc-content h1,
 .doc-content h2,
 .doc-content h3 {
@@ -213,13 +167,11 @@
 .doc-content h2 { font-size: 20px; }
 .doc-content h3 { font-size: 18px; }
 
-/* Paragraphs */
 .doc-content p {
   margin-bottom: 16px;
   font-size: 15.5px;
 }
 
-/* Lists */
 .doc-content ul,
 .doc-content ol {
   margin-left: 24px;
@@ -235,7 +187,6 @@
   list-style-type: decimal;
 }
 
-/* Blockquotes */
 .doc-content blockquote {
   border-left: 4px solid #d1d5db;
   padding-left: 12px;
@@ -245,7 +196,6 @@
   background-color: #f9fafb;
 }
 
-/* Inline Code */
 .doc-content code {
   background-color: #f3f4f6;
   font-family: monospace;
@@ -254,7 +204,6 @@
   font-size: 90%;
 }
 
-/* Code Blocks */
 .doc-content pre {
   background-color: #1f2937;
   color: #f9fafb;
@@ -265,7 +214,6 @@
   font-family: Consolas, monospace;
 }
 
-/* Tables */
 .doc-content table {
   width: 100%;
   border-collapse: collapse;
@@ -297,22 +245,18 @@
   background-color: #f3f4f6;
 }
 
-
-/* Horizontal Rule */
 .doc-content hr {
   border: none;
   border-top: 1px solid #e5e7eb;
   margin: 32px 0;
 }
 
-/* Images */
 .doc-content img {
   max-width: 100%;
   height: auto;
   display: block;
   margin: 20px auto;
 }
-
 
 .opened-doc-full {
   display: flex;
@@ -322,10 +266,214 @@
   padding: 5px;
   background-color: #fff;
   border-radius: 8px;
-  max-width: 100%;       /* ensure it doesn't overflow card */
+  max-width: 100%;       
+  width: 100%;
+  box-sizing: border-box;
+} */
+
+.card-one {
+  background-color: #ffffff;
+  padding: 0;
+  border-radius: 10px;
+  border: 1.5px solid rgb(226, 232, 240);
+  flex: 1 1 100%; /* 👈 take full width by default */
+  max-width: 100%;
+  margin-top: 18px;
+  margin-bottom: 0;
+  height: auto;
+  color: black;
+}
+
+/* Responsive layout for larger screens */
+@media (min-width: 768px) {
+  .card-one {
+    flex: 1 1 30%;
+    max-width: 420px;
+    height: 100%;
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  border-bottom: 1.5px solid rgb(226, 232, 240);
+  margin: 0;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  color: rgb(34, 34, 34);
+  height: 60px;
+  background-color: rgb(248, 250, 252);
+}
+
+.card-header .title {
+  font-size: clamp(15px, 2vw, 17px);
+  padding: clamp(12px, 2vw, 19px);
+}
+
+.card-header .icon {
+  font-size: clamp(14px, 1.8vw, 16px);
+  color: #64748b;
+  cursor: pointer;
+  padding-right: clamp(12px, 2vw, 22px);
+}
+
+.card-content {
+  font-size: clamp(14px, 2vw, 16px);
+  margin-left: 12px;
+}
+
+.card-content h3 {
+  font-size: clamp(15px, 2vw, 17px);
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #111827;
+}
+
+.module-name {
+  font-size: clamp(12px, 1.8vw, 13px);
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+.module {
+  margin-bottom: 12px;
+}
+
+.module-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 6px 0;
+  color: #1f2937;
+  transition: background-color 0.2s;
+}
+
+.module-header:hover {
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  padding-left: 6px;
+}
+
+.module-documents {
+  margin-left: clamp(12px, 3vw, 16px);
+  margin-top: 8px;
+}
+
+.document {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: clamp(13px, 2vw, 14px);
+  padding: 4px 0;
+  transition: background-color 0.2s;
+}
+
+.document:hover {
+  background-color: #f9fafb;
+  border-radius: 6px;
+  padding-left: 4px;
+}
+
+.doc-icon {
+  color: #6366f1;
+  font-size: clamp(14px, 2vw, 16px);
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.doc-link {
+  flex-grow: 1;
+  color: #111827;
+}
+
+.doc-checkbox {
+  accent-color: #6366f1;
+  transform: scale(0.9);
+  margin-right: 12px;
+  cursor: pointer;
+}
+
+.extra-link {
+  font-size: clamp(13px, 2vw, 14px);
+  color: #4b5563;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.extra-link:hover {
+  color: #1d4ed8;
+}
+
+.doc-content {
+  max-height: 73.5vh;
+  overflow-y: auto;
+  padding: clamp(14px, 2vw, 16px);
+  line-height: 1.75;
+  font-size: clamp(14px, 2vw, 15.5px);
+  max-width: 100%;
+  min-width: 100%;
+  color: #1f2937;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.doc-content > * {
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+/* Heading sizes responsive */
+.doc-content h1 { font-size: clamp(20px, 4vw, 24px); }
+.doc-content h2 { font-size: clamp(18px, 3vw, 20px); }
+.doc-content h3 { font-size: clamp(16px, 2.5vw, 18px); }
+
+.doc-content h1,
+.doc-content h2,
+.doc-content h3 {
+  margin-top: 24px;
+  margin-bottom: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* Paragraphs */
+.doc-content p {
+  margin-bottom: 16px;
+  font-size: clamp(14px, 2vw, 15.5px);
+}
+
+/* Lists, Blockquotes, Tables, etc. remain unchanged or minor adjustments can be made if needed */
+
+.opened-doc-full {
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
+  overflow: hidden;
+  padding: 5px;
+  background-color: #fff;
+  border-radius: 8px;
+  max-width: 100%;
   width: 100%;
   box-sizing: border-box;
 }
+
+/* Scrollbars stay the same (they’re already styled well) */
+
 
 .doc-content::-webkit-scrollbar {
   width: 8px;
@@ -356,7 +504,7 @@
   overflow-y: auto;
 }
 
-/* Custom scrollbar styles remain the same */
+
 .scroll-area.scrollable::-webkit-scrollbar {
   width: 8px;
 }
@@ -371,4 +519,4 @@
 .scroll-area.scrollable::-webkit-scrollbar-thumb:hover {
   background-color: rgba(46, 125, 50, 0.6);
 }
-
+ 

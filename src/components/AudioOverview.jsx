@@ -9,6 +9,7 @@ const AudioOverview = ({ selectedDocs }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
+  const endpoint = import.meta.env.VITE_API_URL;
 
   const languages = ["English", "Urdu", "Punjabi", "Sindhi", "Pashto"];
 
@@ -27,11 +28,10 @@ const AudioOverview = ({ selectedDocs }) => {
     setAudioUrl(null); // reset
 
     try {
-      const endpoint = import.meta.env.VITE_API_URL;
       const response = await fetch(`${endpoint}/podcast`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           language: selectedLanguage,
@@ -43,12 +43,12 @@ const AudioOverview = ({ selectedDocs }) => {
         throw new Error(`API error: ${response.statusText}`);
       }
 
-      const data = await response.json();
-      console.log("Podcast generation response:", data);
-      setAudioUrl(data.audio_url); // set URL returned by API
+      const blob = await response.blob();
+      const audioObjectUrl = URL.createObjectURL(blob);
+      setAudioUrl(audioObjectUrl);
     } catch (err) {
-      console.error("Failed to generate podcast:", err);
-      setError(err.message || "Failed to generate podcast");
+      console.error('Failed to generate podcast:', err);
+      setError(err.message || 'Failed to generate podcast');
     } finally {
       setLoading(false);
     }
@@ -57,7 +57,7 @@ const AudioOverview = ({ selectedDocs }) => {
   return (
     <div className="audio-overview">
       <div className="audio-header" style={{ position: "relative" }}>
-        <span className="audio-title">Audio Overview</span>
+        <span className="audio-title" style={{fontSize: "13px"}}>Audio Overview</span>
         <FiInfo
           className="info-icon"
           onClick={() => setShowLanguageMenu(!showLanguageMenu)}
@@ -81,7 +81,7 @@ const AudioOverview = ({ selectedDocs }) => {
               style={{
                 marginBottom: "4px",
                 fontWeight: "normal",
-                fontSize: "12px",
+                fontSize: "10px",
               }}
             >
               Select Language:
@@ -93,7 +93,7 @@ const AudioOverview = ({ selectedDocs }) => {
                 style={{
                   cursor: "pointer",
                   padding: "4px 0",
-                  fontSize: "11px",
+                  fontSize: "9px",
                   fontWeight: lang === selectedLanguage ? "bold" : "normal",
                   color: lang === selectedLanguage ? "#007bff" : "inherit",
                 }}
@@ -106,7 +106,7 @@ const AudioOverview = ({ selectedDocs }) => {
       </div>
 
       <div className="load-box">
-        <span className="load-text">Click to generate the podcast.</span>
+        <span className="load-text"  style={{fontSize: "11px"}}>Click to generate the podcast.</span>
         <button
           className="load-button"
           onClick={handleGenerateClick}

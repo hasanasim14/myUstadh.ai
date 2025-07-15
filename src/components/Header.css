@@ -1,4 +1,4 @@
-.header-container {
+/* .header-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -38,4 +38,50 @@
   display: flex;
   align-items: center;
   gap: 16px;
+} */
+
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 74px;
+  background-color: #ffffff;
+  border-bottom: 2px solid rgb(226, 232, 240);
+
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.header-left{
+    display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1; 
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  /* flex: 1; ✅ allow it to grow and take more space */
+
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #000000;
+}
+
+.header-middle {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }

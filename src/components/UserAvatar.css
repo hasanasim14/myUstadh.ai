@@ -1,6 +1,6 @@
 .user-avatar {
-  width: 32px;
-  height: 32px;
+  width: 22px;
+  height: 22px;
   background-color: #e0e0e0;
   border-radius: 50%;
   display: flex;
@@ -11,7 +11,7 @@
 }
 
 .avatar-letter {
-  font-size: 1rem;
+  font-size: 0.75rem;
   font-weight: bold;
   color: #333;
 }
