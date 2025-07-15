@@ -24,6 +24,7 @@ const CardThree = ({ notes, setNotes, selectedDocs }) => {
   // states for the mindmap modal
   const [mindmapOpen, setMindmapOpen] = useState(false);
   const [mindmapMarkdown, setMindmapMarkdown] = useState("");
+  const endpoint = import.meta.env.VITE_API_URL;
 
   // function added to fetch the mindmap from the backend when the user clicks on the Mind Map button
   const fetchMindmap = async () => {
@@ -35,7 +36,8 @@ const CardThree = ({ notes, setNotes, selectedDocs }) => {
           selectedDocs: selectedDocs,
         }
       );
-
+      
+      console.log("Mindmap response:", response.data);
       const markdownContent = response.data.markdown || "No mindmap available.";
 
       const newMindmapNote = {
@@ -187,9 +189,7 @@ const CardThree = ({ notes, setNotes, selectedDocs }) => {
   const handleFetchAndAddNote = async (type) => {
     let contentEndpoint = "";
 
-    const endpoint = import.meta.env.VITE_API_URL;
-
-    if (type === "Study Guide") contentEndpoint = `${endpoint}/study-guide'`;
+    if (type === "Study Guide") contentEndpoint = `${endpoint}/study-guide`;
     else if (type === "Briefing Doc")
       contentEndpoint = `${endpoint}/briefing-doc`;
     else if (type === "FAQ") contentEndpoint = `${endpoint}/faq`;
@@ -309,7 +309,7 @@ const CardThree = ({ notes, setNotes, selectedDocs }) => {
                   position: "relative",
                   cursor: "pointer",
                   minHeight: "40px",
-                  maxHeight: "80px",
+                  maxHeight: "55px",
                   overflow: "hidden",
                   paddingBottom: "10px",
                   paddingRight: "10px",
@@ -326,7 +326,7 @@ const CardThree = ({ notes, setNotes, selectedDocs }) => {
                 >
                   <span
                     style={{
-                      fontSize: "16px",
+                      fontSize: "13px",
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
@@ -418,7 +418,7 @@ const CardThree = ({ notes, setNotes, selectedDocs }) => {
                   </div>
                 </div>
                 <div
-                  style={{ marginTop: "5px", color: "#555", fontSize: "14px" }}
+                  style={{ marginTop: "0px", color: "#555", fontSize: "12px" }}
                 >
                   {note.editable ? (
                     <ReactMarkdown

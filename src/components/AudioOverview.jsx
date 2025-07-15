@@ -12,6 +12,7 @@ const AudioOverview = ({ selectedDocs }) => {
   const endpoint = import.meta.env.VITE_API_URL;
 
   const languages = ["English", "Urdu", "Punjabi", "Sindhi", "Pashto"];
+  const sessionId = sessionStorage.getItem("session_id") || "";
 
   // this function handles the selection of a language from the dropdown menu
   // it updates the selectedLanguage state and closes the menu
@@ -36,6 +37,7 @@ const AudioOverview = ({ selectedDocs }) => {
         body: JSON.stringify({
           language: selectedLanguage,
           selectedDocs,
+          sessionId: sessionId,
         }),
       });
 

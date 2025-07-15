@@ -4,10 +4,17 @@
   padding: 0px;
   border-radius: 10px;
   border: 1.5px solid rgb(226, 232, 240);
-  flex: 1; /* 1 part of the total 4 */
+  flex: 1;
   margin-top: 18px; 
   margin-bottom: 0px; 
   height: 100%;
+}
+
+@media (min-width: 768px) {
+  .card-container {
+    flex-direction: row;
+    gap: 16px;
+  }
 }
 .card-header {
   display: flex;
@@ -30,7 +37,7 @@
 
 .card-header .icon {
   font-size: 16px;
-  color: #64748b; /* Tailwind's slate-500 */
+  color: #64748b; 
   cursor: pointer;
   padding-right: 22px;
 }
@@ -68,7 +75,7 @@
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
-  color: black; /* ← Add this */
+  color: black;
 
 }
 
@@ -86,12 +93,13 @@
 .add-note {
   background: #f5f5f5;
   border: none;
+  font-size: 12px;
   padding: 6px;
   border-radius: 10px;
   width: 100%;
   margin-bottom: 12px;
   cursor: pointer;
-  color: black; /* ← Add this */
+  color: black;
   height: 40px;
 }
 
@@ -106,11 +114,11 @@
   flex: 1 1 45%;
   background-color: #f0f0f0;
   border: none;
-  padding: 6px 10px;
+  padding: 6px 14px;
   border-radius: 10px;
-  font-size: 14px;
+  font-size: 12px;
   cursor: pointer;
-  color: black; /* ← Add this */
+  color: black; 
   height: 40px;
 }
 
@@ -132,14 +140,13 @@
   color: black;
 }
 .notes-scroll-container {
-  max-height: 410px; /* adjust height as needed */
+  max-height: 410px; 
   overflow-y: auto;
-  padding-right: 8px; /* to prevent content hiding behind scrollbar */
+  padding-right: 8px; 
   margin-top: 12px;
   background-color: #ffffff;
 }
 
-/* Optional: improve scrollbar styling */
 .notes-scroll-container::-webkit-scrollbar {
   width: 6px;
 }
@@ -149,18 +156,6 @@
   border-radius: 4px;
 }
 
-/* .modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-} */
 
 .modal-content { 
   background: #fff;
@@ -203,22 +198,10 @@
   background-color: rgba(46, 125, 50, 0.6);
 }
 
-/* Optional: Firefox support */
 .modal-scroll {
   scrollbar-width: thin;
   scrollbar-color: rgba(46, 125, 50, 0.3) transparent;
 }
-
-/* this is the css styling for the view only modal for studyguides, faq and briefing document
-.markdown-content h1,
-.markdown-content h2,
-.markdown-content h3,
-.markdown-content h4,
-.markdown-content h5,
-.markdown-content h6 {
-  font-weight: 500; 
-} */
-
 
 .spinner {
   width: 16px;
