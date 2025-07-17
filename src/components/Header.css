@@ -1,4 +1,4 @@
-/* .header-container {
+.header-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -38,9 +38,9 @@
   display: flex;
   align-items: center;
   gap: 16px;
-} */
+}
 
-.header-container {
+/* .header-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -70,7 +70,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  /* flex: 1; ✅ allow it to grow and take more space */
+
 
 }
 
@@ -84,4 +84,4 @@
   flex: 1;
   display: flex;
   justify-content: center;
-}
+} */
