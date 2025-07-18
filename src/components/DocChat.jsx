@@ -169,7 +169,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
         question: userInput,
         answer: null,
       });
-      
+
       const sessionId = sessionStorage.getItem("session_id") || "";
 
       const payload = {
@@ -185,7 +185,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
         session_id: sessionId, // ✅ Add this line
         selectedDocs: selectedDocs,
       };
-    
+
       let response;
       console.log("API Endpoint:", import.meta.env.VITE_API_URL);
       if (!selectedDocs || selectedDocs.length === 0) {
@@ -207,9 +207,9 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
 
       if (data.session_id) {
         sessionStorage.setItem("session_id", data.session_id);
-       }
+      }
 
-      console.log("Session Id:", data.session_id); 
+      console.log("Session Id:", data.session_id);
       console.log("Response from API:", data);
 
       const botReply =
@@ -277,7 +277,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
                   msg.text
                 )}
               </div>
-              <div className="timestamp">
+              <div className="timestamp flex">
                 {msg.time}
                 {msg.from === "bot" && msg.text !== initialBotMessage.text && (
                   <>

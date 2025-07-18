@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+*,
+*::after {
+  box-sizing: content-box !important;
+}

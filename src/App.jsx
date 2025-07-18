@@ -11,7 +11,11 @@ export default function App() {
   const [notes, setNotes] = useState([]);
 
   const handleAddPinnedNote = (question, answer) => {
-    const newNote = { question, answer };
+    const newNote = {
+      title: `Pinned: ${question.slice(0, 30)}...`,
+      content: answer,
+      editable: false,
+    };
     setNotes((prev) => [...prev, newNote]);
   };
 
