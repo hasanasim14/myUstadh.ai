@@ -32,6 +32,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
   }, [refreshTrigger]);
 
   const playNoteAudioFromAPI = async (text, index) => {
+    console.log("in the audio method");
     setClickedIndex(index);
     if (playingIndex === index) {
       if (audioRef.current) {
