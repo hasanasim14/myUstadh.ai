@@ -39,7 +39,8 @@ const Chat = ({ refreshTrigger, onPinNote }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/generate-audio/", {
+      // const response = await fetch("http://localhost:8000/generate-audio/", {
+      const response = await fetch(`${endpoint}/generate-audio`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
