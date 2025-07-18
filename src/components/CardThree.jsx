@@ -30,13 +30,10 @@ const CardThree = ({ notes, setNotes, selectedDocs }) => {
   const fetchMindmap = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${endpoint}/generate-mindmap`,
-        {
-          selectedDocs: selectedDocs,
-        }
-      );
-      
+      const response = await axios.post(`${endpoint}/generate-mindmap`, {
+        selectedDocs: selectedDocs,
+      });
+
       console.log("Mindmap response:", response.data);
       const markdownContent = response.data.markdown || "No mindmap available.";
 
@@ -249,7 +246,7 @@ const CardThree = ({ notes, setNotes, selectedDocs }) => {
   };
 
   return (
-    <div className="card-three">
+    <div className="h-[85vh] md:border md:rounded-lg border-gray-200">
       <div className="card-header">
         <span className="title">Library</span>
         <span className="icon">
@@ -261,7 +258,9 @@ const CardThree = ({ notes, setNotes, selectedDocs }) => {
         <AudioOverview selectedDocs={selectedDocs} />
 
         <div className="notes-section">
-          <span className="section-title"  style={{fontSize: "13px"}}>Notes</span>
+          <span className="section-title" style={{ fontSize: "13px" }}>
+            Notes
+          </span>
           <button className="add-note" onClick={handleAddNote}>
             + Add note
           </button>

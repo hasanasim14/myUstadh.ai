@@ -1,27 +1,34 @@
-import React, { useState } from 'react';
-import { FiRefreshCw } from 'react-icons/fi';
-import DocChat from './DocChat';
-import './CardTwo.css';
+import React, { useState } from "react";
+import { FiRefreshCw } from "react-icons/fi";
+import DocChat from "./DocChat";
+import "./CardTwo.css";
 
-const CardTwo = ({onPinNote, selectedDocs}) => {
+const CardTwo = ({ onPinNote, selectedDocs }) => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleRefresh = () => {
-    setRefreshTrigger(prev => prev + 1); // Increment to trigger Chat reset
+    setRefreshTrigger((prev) => prev + 1); // Increment to trigger Chat reset
   };
 
   return (
-    <div className="card card-two">
+    <div className="h-[85vh] md:border md:rounded-lg border-gray-200">
       <div className="card-header">
         <span className="title">AI Chat</span>
-        <div className="refresh-container" onClick={handleRefresh} style={{ cursor: 'pointer' }}>
+        <div
+          className="refresh-container"
+          onClick={handleRefresh}
+          style={{ cursor: "pointer" }}
+        >
           <FiRefreshCw className="refresh-icon" />
           <span className="refresh-text">Refresh</span>
         </div>
       </div>
       <div className="card-content">
-        <DocChat refreshTrigger={refreshTrigger} onPinNote={onPinNote} selectedDocs={selectedDocs} />
-
+        <DocChat
+          refreshTrigger={refreshTrigger}
+          onPinNote={onPinNote}
+          selectedDocs={selectedDocs}
+        />
       </div>
     </div>
   );
