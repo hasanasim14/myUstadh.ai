@@ -47,7 +47,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
     try {
       // const endpoint =
       console.log("the endpoint being called is", `${endpoint}/generate-audio`);
-      const response = await fetch(`${endpoint}/generate-audio`, {
+      const response = await fetch(`${endpoint}/generate-audio/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
