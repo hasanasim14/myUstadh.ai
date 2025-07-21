@@ -35,9 +35,9 @@ const AudioOverview = ({ selectedDocs }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          session_id: sessionId,
           language: selectedLanguage,
           selectedDocs,
-          sessionId: sessionId,
         }),
       });
 
