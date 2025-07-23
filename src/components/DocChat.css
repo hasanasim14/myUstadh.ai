@@ -23,18 +23,17 @@
   margin-bottom: 8px;
 }
 
-.message-container.bot {
-  /* padding-right: 2px; */
-  /* flex-direction: row; */
-  /* box-sizing: content-box; */
-}
-
-.message-container.user {
-  /* display: flex; */
-  padding-right: 40px;
-
-  flex-direction: row-reverse;
-  /* box-sizing: unset !important; */
+.message.user,
+.message.bot {
+  background-color: #e3f2fd;
+  max-width: 70%;
+  width: fit-content;
+  min-width: 40px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.2;
 }
 
 .bubble-timestamp {

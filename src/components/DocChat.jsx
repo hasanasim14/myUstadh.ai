@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaUser, FaRobot, FaMicrophone } from "react-icons/fa";
-import { Pin, Headphones, Send, Mic, SendHorizonal } from "lucide-react";
+import { FaUser, FaRobot } from "react-icons/fa";
+import { Pin, Headphones, Mic, SendHorizonal, Copy } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import "./DocChat.css";
 
@@ -45,7 +45,6 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
     }
 
     try {
-      // const endpoint =
       console.log("the endpoint being called is", `${endpoint}/generate-audio`);
       const response = await fetch(`${endpoint}/generate-audio/`, {
         method: "POST",
@@ -252,16 +251,37 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
     <div className="chat-window">
       <div className="messages">
         {messages.map((msg, index) => (
-          <div key={index} className={`message-container ${msg.from}`}>
-            <div className="message-icon">
+          <div
+            key={index}
+            className={`flex items-start gap-2 mb-2 ${
+              msg.from === "user" ? "flex-row-reverse" : ""
+            }`}
+          >
+            {/* Icon */}
+            <div className="flex-shrink-0">
               {msg.from === "user" ? (
-                <FaUser size={16} />
+                <FaUser
+                  size={25}
+                  className="text-white bg-[#bbdefb] rounded-full p-1"
+                />
               ) : (
-                <FaRobot size={16} />
+                <FaRobot
+                  size={25}
+                  className="text-white bg-[#c8e6c9] rounded-full p-1"
+                />
               )}
             </div>
-            <div className="bubble-timestamp">
-              <div className={`message ${msg.from}`}>
+
+            {/* Message + timestamp */}
+            <div className="flex flex-col items-start max-w-[75%] sm:max-w-[80%]">
+              <div
+                className={`px-3 py-2 rounded-xl whitespace-pre-wrap break-words text-sm ${
+                  msg.from === "user"
+                    ? "bg-blue-100 text-black self-end"
+                    : "bg-green-100 text-black self-start"
+                }`}
+                style={{ minWidth: "50px" }}
+              >
                 {typeof msg.text === "string" ? (
                   <ReactMarkdown
                     components={{
@@ -270,6 +290,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
                           {...props}
                           target="_blank"
                           rel="noopener noreferrer"
+                          className="text-blue-600 underline"
                         />
                       ),
                     }}
@@ -280,17 +301,20 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
                   msg.text
                 )}
               </div>
-              <div className="timestamp flex">
+
+              {/* Timestamp + Actions */}
+              <div
+                className={`mt-1 text-xs text-gray-500 flex items-center ${
+                  msg.from === "user" ? "justify-end" : "justify-start"
+                } w-full`}
+              >
                 {msg.time}
+
                 {msg.from === "bot" && msg.text !== initialBotMessage.text && (
                   <>
                     <Pin
                       size={12}
-                      style={{
-                        marginLeft: "18px",
-                        verticalAlign: "middle",
-                        cursor: "pointer",
-                      }}
+                      className="ml-4 cursor-pointer"
                       title="Pin this response"
                       onClick={() => {
                         const userQuestion =
@@ -304,21 +328,19 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
                     />
                     <Headphones
                       size={12}
+                      className="ml-3 cursor-pointer"
+                      title="Listen to this response"
+                      onClick={() => playNoteAudioFromAPI(msg.text, index)}
                       style={{
-                        marginLeft: "16px",
-                        verticalAlign: "middle",
-                        cursor: "pointer",
                         color:
                           clickedIndex === index
                             ? "red"
                             : playingIndex === index
                             ? "green"
                             : "black",
-                        outline: "none",
                       }}
-                      title="Listen to this response"
-                      onClick={() => playNoteAudioFromAPI(msg.text, index)}
                     />
+                    <Copy size={12} className="ml-3 cursor-pointer" />
                   </>
                 )}
               </div>
