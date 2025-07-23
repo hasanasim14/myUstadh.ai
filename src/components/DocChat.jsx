@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaUser, FaRobot, FaMicrophone } from "react-icons/fa";
-import { Pin, Headphones, Send } from "lucide-react";
+import { Pin, Headphones, Send, Mic, SendHorizonal } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import "./DocChat.css";
 
@@ -327,8 +327,9 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
         ))}
       </div>
 
-      <div className="input-area">
+      <div className="flex pr-4">
         <input
+          // className="w-[100]"
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -340,15 +341,21 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
           placeholder="Start Typing..."
         />
         <div
-          className="mic-icon"
+          className="p-2 hover:bg-gray-100 rounded-full"
+          // className="mic-icon"
           onClick={toggleRecording}
           style={{ color: isRecording ? "green" : "black", cursor: "pointer" }}
           title={isRecording ? "Stop Recording" : "Start Recording"}
         >
-          <FaMicrophone size={18} />
+          {/* <FaMicrophone size={18} /> */}
+          <Mic className="w-6 h-6" />
         </div>
-        <button onClick={() => sendMessage()}>
-          <Send className="w-3 h-3" />
+        <button
+          className="p-2 bg-[#3b4dd1] text-white rounded-full cursor-pointer"
+          onClick={() => sendMessage()}
+          disabled={!input.trim()}
+        >
+          <SendHorizonal className="w-6 h-6" />
         </button>
       </div>
     </div>

@@ -26,7 +26,7 @@ const Navbar = () => {
     <nav className="bg-white text-black shadow-sm relative z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-6">
-          <span className="text-2xl font-bold tracking-wide">myUstadh.ai</span>
+          <span className="text-2xl font-bold tracking-wide">myUstad.ai</span>
 
           {!isMobile && (
             <div className="flex-grow mx-6">

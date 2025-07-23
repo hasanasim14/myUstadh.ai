@@ -10,7 +10,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import "./CardOne.css";
 
-const CardOne = ({ selectedDocs, setSelectedDocs }) => {
+const CardOne = ({ selectedDocs, setSelectedDocs, onCollapseChange }) => {
   // this state variable has been added to keep track of which modules are open
   const [openModules, setOpenModules] = useState({});
   // this state variable has been added to store the document that is currently opened
@@ -23,6 +23,8 @@ const CardOne = ({ selectedDocs, setSelectedDocs }) => {
       [moduleName]: !prev[moduleName],
     }));
   };
+  // maintaining the state for card
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // this function has been added to handle the checkbox change event
   // const handleCheckboxChange = (doc) => {
@@ -367,109 +369,140 @@ const CardOne = ({ selectedDocs, setSelectedDocs }) => {
     notesAndHighlights: true,
   };
 
+  const toggleCollapse = () => {
+    setIsCollapsed((prev) => {
+      const newCollapsed = !prev;
+      if (onCollapseChange) {
+        onCollapseChange(newCollapsed);
+      }
+      return newCollapsed;
+    });
+  };
+
   return (
-    <div className="h-[85vh] md:border md:rounded-lg border-gray-200">
-      <div className="card-header">
-        <span className="title">{cardData.title}</span>
-        <span className="icon">
-          <FiChevronLeft />
-        </span>
-      </div>
-      <div className="card-content">
-        <div className={`scroll-area ${!openedDoc ? "scrollable" : ""}`}>
-          {openedDoc ? (
-            <div className="opened-doc-full">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  paddingLeft: "50px",
-                }}
-              >
-                <h3 style={{ textTransform: "uppercase" }}>{openedDoc.name}</h3>
-                <button
-                  onClick={() => setOpenedDoc(null)}
-                  style={{
-                    border: "none",
-                    background: "transparent",
-                    fontSize: "20px",
-                    cursor: "pointer",
-                    color: "red",
-                    outline: "none",
-                  }}
-                >
-                  <FiX />
-                </button>
-              </div>
-              <div style={{ marginTop: "5px" }}>
-                <div className="doc-content">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {openedDoc.content}
-                  </ReactMarkdown>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <>
-              <h3>Test Development and Evaluation</h3>
-
-              {cardData.modules.map((module, idx) => {
-                const isOpen = openModules[module.name];
-                return (
-                  <div key={idx} className="module">
-                    <div
-                      className="module-header"
-                      onClick={() => toggleModule(module.name)}
-                    >
-                      {isOpen ? <FiChevronDown /> : <FiChevronRight />}
-                      <span className="module-name">{module.name}</span>
-                    </div>
-                    {isOpen && module.documents.length > 0 && (
-                      <div className="module-documents">
-                        {module.documents.map((doc, docIdx) => (
-                          <div key={docIdx} className="document">
-                            <FiFileText className="doc-icon" />
-                            <span
-                              className="doc-link"
-                              style={{ cursor: "pointer" }}
-                              onClick={() => openDocument(doc)}
-                            >
-                              {doc.name}
-                            </span>
-                            <input
-                              type="checkbox"
-                              className="doc-checkbox"
-                              // checked={selectedDocs.some(d => d.id === doc.id)}
-                              // onChange={() => handleCheckboxChange(doc)}
-                              checked={selectedDocs.some(
-                                (d) => d.uniqueId === `${module.name}-${doc.id}`
-                              )}
-                              onChange={() =>
-                                handleCheckboxChange({
-                                  ...doc,
-                                  uniqueId: `${module.name}-${doc.id}`,
-                                })
-                              }
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-
-              {cardData.audioOverview && (
-                <div className="extra-link">▶ Audio Overview</div>
-              )}
-              {cardData.notesAndHighlights && (
-                <div className="extra-link">🗒️ Notes and Highlights</div>
-              )}
-            </>
-          )}
+    <div
+      className={`h-[85vh] md:border md:rounded-lg border-gray-200 transition-all duration-300 overflow-hidden ${
+        isCollapsed ? "w-15" : "w-full"
+      }`}
+    >
+      {isCollapsed ? (
+        // When collapsed: center the button in the entire card
+        <div className="flex justify-center pt-4">
+          <button
+            className="cursor-pointer p-2 rounded-lg hover:bg-gray-200 text-[#64748b]"
+            onClick={toggleCollapse}
+          >
+            <FiChevronRight />
+          </button>
         </div>
-      </div>
+      ) : (
+        // When expanded: show header + content
+        <>
+          {/* Header */}
+          <div className="flex items-center justify-between p-2">
+            <span className="title text-lg font-semibold">
+              {cardData.title}
+            </span>
+            <button
+              className="cursor-pointer p-2 rounded-lg hover:bg-gray-200 text-[#64748b]"
+              onClick={toggleCollapse}
+            >
+              <FiChevronLeft />
+            </button>
+          </div>
+
+          {/* Content */}
+          <div className="card-content">
+            <div className={`scroll-area ${!openedDoc ? "scrollable" : ""}`}>
+              {openedDoc ? (
+                <div className="opened-doc-full p-4">
+                  <div className="flex justify-between items-center pl-6">
+                    <h3 className="uppercase">{openedDoc.name}</h3>
+                    <button
+                      onClick={() => setOpenedDoc(null)}
+                      className="text-red-500 text-xl hover:text-red-700"
+                    >
+                      <FiX />
+                    </button>
+                  </div>
+                  <div className="mt-2 doc-content">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {openedDoc.content}
+                    </ReactMarkdown>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h3 className="px-4 font-medium text-gray-700">
+                    Test Development and Evaluation
+                  </h3>
+
+                  {cardData.modules.map((module, idx) => {
+                    const isOpen = openModules[module.name];
+                    return (
+                      <div key={idx} className="module px-4 py-2">
+                        <div
+                          className="module-header flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded"
+                          onClick={() => toggleModule(module.name)}
+                        >
+                          {isOpen ? <FiChevronDown /> : <FiChevronRight />}
+                          <span className="module-name font-medium">
+                            {module.name}
+                          </span>
+                        </div>
+
+                        {isOpen && module.documents.length > 0 && (
+                          <div className="module-documents pl-6">
+                            {module.documents.map((doc, docIdx) => (
+                              <div
+                                key={docIdx}
+                                className="document flex items-center gap-2 py-1"
+                              >
+                                <FiFileText className="doc-icon text-gray-500" />
+                                <span
+                                  className="doc-link cursor-pointer hover:underline"
+                                  onClick={() => openDocument(doc)}
+                                >
+                                  {doc.name}
+                                </span>
+                                <input
+                                  type="checkbox"
+                                  className="doc-checkbox ml-auto"
+                                  checked={selectedDocs.some(
+                                    (d) =>
+                                      d.uniqueId === `${module.name}-${doc.id}`
+                                  )}
+                                  onChange={() =>
+                                    handleCheckboxChange({
+                                      ...doc,
+                                      uniqueId: `${module.name}-${doc.id}`,
+                                    })
+                                  }
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+
+                  {cardData.audioOverview && (
+                    <div className="extra-link px-4 py-2 text-blue-600 hover:underline cursor-pointer">
+                      ▶ Audio Overview
+                    </div>
+                  )}
+                  {cardData.notesAndHighlights && (
+                    <div className="extra-link px-4 py-2 text-blue-600 hover:underline cursor-pointer">
+                      🗒️ Notes and Highlights
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

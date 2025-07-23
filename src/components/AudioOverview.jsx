@@ -30,9 +30,9 @@ const AudioOverview = ({ selectedDocs }) => {
 
     try {
       const response = await fetch(`${endpoint}/podcast`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           session_id: sessionId,
@@ -49,8 +49,8 @@ const AudioOverview = ({ selectedDocs }) => {
       const audioObjectUrl = URL.createObjectURL(blob);
       setAudioUrl(audioObjectUrl);
     } catch (err) {
-      console.error('Failed to generate podcast:', err);
-      setError(err.message || 'Failed to generate podcast');
+      console.error("Failed to generate podcast:", err);
+      setError(err.message || "Failed to generate podcast");
     } finally {
       setLoading(false);
     }
@@ -59,7 +59,9 @@ const AudioOverview = ({ selectedDocs }) => {
   return (
     <div className="audio-overview">
       <div className="audio-header" style={{ position: "relative" }}>
-        <span className="audio-title" style={{fontSize: "13px"}}>Audio Overview</span>
+        <span className="audio-title" style={{ fontSize: "13px" }}>
+          Audio Overview
+        </span>
         <FiInfo
           className="info-icon"
           onClick={() => setShowLanguageMenu(!showLanguageMenu)}
@@ -108,9 +110,11 @@ const AudioOverview = ({ selectedDocs }) => {
       </div>
 
       <div className="load-box">
-        <span className="load-text"  style={{fontSize: "11px"}}>Click to generate the podcast.</span>
+        <span className="load-text" style={{ fontSize: "11px" }}>
+          Click to generate the podcast.
+        </span>
         <button
-          className="load-button"
+          className="flex items-center justify-center bg-[#4259ff] text-white rounded-xl p-2 text-sm font-semibold cursor-pointer hover:bg-[#3a4bda] w-full"
           onClick={handleGenerateClick}
           disabled={loading}
         >
