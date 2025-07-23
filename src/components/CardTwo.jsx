@@ -15,7 +15,7 @@ const CardTwo = ({ onPinNote, selectedDocs }) => {
       <div className="card-header">
         <span className="title">AI Chat</span>
         <div
-          className="refresh-container"
+          className="refresh-container hover:bg-gray-200 rounded-lg p-2 mr-2"
           onClick={handleRefresh}
           style={{ cursor: "pointer" }}
         >

@@ -39,7 +39,7 @@
   font-size: 14px;
   color: #64748b; /* Tailwind's slate-500 */
   cursor: pointer;
-  padding-right: 25px;
+  /* padding-right: 25px; */
 }
 
 .refresh-container {
@@ -55,6 +55,7 @@
   font-size: 17px;
   padding-right: 5px;
 }
+
 .card-content {
   padding: 5px;
   height: calc(100% - 60px); /* subtract header height */
