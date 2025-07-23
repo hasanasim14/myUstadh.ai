@@ -47,13 +47,13 @@ export default function App() {
     } else if (leftCollapsed) {
       return {
         cardOne: "basis-[5%]",
-        cardTwo: "basis-[75%]",
-        cardThree: "basis-[20%]",
+        cardTwo: "basis-[70%]",
+        cardThree: "basis-[25%]",
       };
     } else if (rightCollapsed) {
       return {
-        cardOne: "basis-[20%]",
-        cardTwo: "basis-[75%]",
+        cardOne: "basis-[25%]",
+        cardTwo: "basis-[70%]",
         cardThree: "basis-[5%]",
       };
     } else {
