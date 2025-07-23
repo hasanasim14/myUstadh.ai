@@ -11,6 +11,7 @@ import AudioOverview from "./AudioOverview";
 import axios from "axios";
 import MindmapModal from "./MindmapModal"; // adjust the path if needed
 import {
+  ChevronRight,
   FileText,
   GraduationCap,
   MessageSquareText,
@@ -284,17 +285,21 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
       }`}
     >
       {isCollapsed ? (
-        <div className="flex justify-end p-2">
+        <div className="flex justify-center pt-4">
+          {/* // <div className="flex justify-end p-2"> */}
           <button
             className="cursor-pointer p-2 rounded-lg hover:bg-gray-200 text-[#64748b]"
             onClick={toggleCollapse}
           >
-            {isCollapsed ? <FiChevronRight /> : <FiChevronLeft />}
+            {/* <ChevronRight /> */}
+            <FiChevronLeft />
+            {/* {isCollapsed ? <FiChevronRight /> : <FiChevronLeft />} */}
           </button>
         </div>
       ) : (
         <>
           <div className="card-header">
+            {/* <div className="flex justify-center pt-4"> */}
             <span className="title">Library</span>
             {/* <span className="icon"> */}
             <button
