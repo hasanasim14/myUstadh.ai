@@ -1,12 +1,11 @@
-
 .card-three {
   background-color: #ffffff;
   padding: 0px;
   border-radius: 10px;
   border: 1.5px solid rgb(226, 232, 240);
   flex: 1;
-  margin-top: 18px; 
-  margin-bottom: 0px; 
+  margin-top: 18px;
+  margin-bottom: 0px;
   height: 100%;
 }
 
@@ -27,7 +26,7 @@
   border-top-left-radius: 10px;
   color: rgb(34, 34, 34);
   height: 60px;
-  background-color: rgb(248,250,252);
+  background-color: rgb(248, 250, 252);
 }
 
 .card-header .title {
@@ -37,7 +36,7 @@
 
 .card-header .icon {
   font-size: 16px;
-  color: #64748b; 
+  color: #64748b;
   cursor: pointer;
   padding-right: 22px;
 }
@@ -76,7 +75,6 @@
   border-radius: 6px;
   cursor: pointer;
   color: black;
-
 }
 
 .notes-section {
@@ -118,21 +116,16 @@
   border-radius: 10px;
   font-size: 12px;
   cursor: pointer;
-  color: black; 
+  color: black;
   height: 40px;
 }
 
 .note-text-block {
   background-color: #fafafa;
-  padding: 6px;
-  border-radius: 6px;
-  margin-bottom: 10px;
-  height: 60px;
-}
-
-.note-text-title {
-  font-weight: 600;
-  margin-bottom: 4px;
+  /* padding: 6px; */
+  /* border-radius: 6px; */
+  /* margin-bottom: 10px; */
+  /* height: 60px; */
 }
 
 .card-container {
@@ -140,9 +133,9 @@
   color: black;
 }
 .notes-scroll-container {
-  max-height: 410px; 
+  max-height: 410px;
   overflow-y: auto;
-  padding-right: 8px; 
+  padding-right: 8px;
   margin-top: 12px;
   background-color: #ffffff;
 }
@@ -156,14 +149,13 @@
   border-radius: 4px;
 }
 
-
-.modal-content { 
+.modal-content {
   background: #fff;
   padding: 20px;
   width: 500px;
   max-width: 90%;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.25);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   color: black;
 }
 

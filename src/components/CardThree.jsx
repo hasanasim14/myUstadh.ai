@@ -12,6 +12,7 @@ import axios from "axios";
 import MindmapModal from "./MindmapModal"; // adjust the path if needed
 import {
   ChevronRight,
+  Edit,
   FileText,
   GraduationCap,
   MessageSquareText,
@@ -363,11 +364,11 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                 </div>
               )}
               {/* Starting onwards here is the code of when the notes get created whenn you click on the add a note button and the functionality of it being edittable */}
-              <div className="notes-scroll-container">
+              <div className="notes-scroll-container border-t border-gray-200 px-1 py-4">
                 {notes.map((note, index) => (
                   <div
                     key={index}
-                    className="note-text-block"
+                    className="note-text-block border border-gray-100 rounded-lg mb-3"
                     onClick={() => handleNoteClick(index)} // ✅ Add this line
                     style={{
                       position: "relative",
@@ -380,59 +381,48 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                       paddingLeft: "10px",
                     }}
                   >
-                    <div
+                    {/* <div
                       className="note-text-title"
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
-                        alignItems: "center",
+                        // alignItems: "center",
                       }}
-                    >
+                    > */}
+                    <div className="flex justify-between items-center pb-2 font-semibold">
                       <span
                         style={{
-                          fontSize: "13px",
+                          // fontSize: "13px",
                           whiteSpace: "nowrap",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
-                          maxWidth: "210px", // adjust as needed
+                          maxWidth: "210px",
                           display: "inline-block",
                           verticalAlign: "middle",
                         }}
                       >
                         {note.title}
                       </span>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "2px",
-                          position: "relative",
-                        }}
-                      >
-                        {/* The Headphone icon performs the functionality of reading out the content of the note aloud */}
+
+                      <div className="flex items-center gap-3">
                         <button
+                          className="bg-transparent cursor-pointer"
                           onClick={(e) => {
                             e.stopPropagation();
                             playNoteAudioFromAPI(note.content, index);
                           }}
                           style={{
-                            background: "transparent",
-                            border: "none",
-                            cursor: "pointer",
-                            fontSize: "14px",
                             color:
                               clickedIndex === index
                                 ? "red"
                                 : playingIndex === index
-                                ? "green" // Currently playing
-                                : "black", // Default
+                                ? "green"
+                                : "black",
                             outline: "none",
-                            marginRight: "2px",
                           }}
                         >
                           <FiHeadphones />
                         </button>
-                        {/* The three dot icons expands to show the option of deleting the note incase the user no longer needs it */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -442,12 +432,10 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                             background: "transparent",
                             border: "none",
                             cursor: "pointer",
-                            fontSize: "15px",
-                            float: "right",
-                            marginTop: "-5px",
-                            marginRight: "2px",
+                            fontSize: "18px",
                             outline: "none",
                             color: "black",
+                            lineHeight: "1",
                           }}
                         >
                           ⋮
@@ -538,7 +526,9 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                   boxSizing: "border-box",
                 }}
               >
-                <h3>Edit Note</h3>
+                <h1 className="flex items-center gap-2 mb-4">
+                  <Edit className="h-4 w-4" /> Edit Note
+                </h1>
                 <input
                   type="text"
                   value={editTitle}
@@ -574,17 +564,18 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                   }}
                   disabled={!notes[currentEditNoteIndex]?.editable}
                 />
-                <div style={{ marginTop: "10px", textAlign: "right" }}>
+                <div className="mt-4 flex justify-end gap-3">
                   <button
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-red-500 hover:bg-red-700 transition cursor-pointer"
                     onClick={() => setIsEditModalOpen(false)}
-                    style={{ marginRight: "10px", backgroundColor: "blue" }}
                   >
                     Cancel
                   </button>
+
                   {notes[currentEditNoteIndex]?.editable && (
                     <button
                       onClick={handleSaveEdit}
-                      style={{ backgroundColor: "green" }}
+                      className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-green-600 hover:bg-green-700 transition cursor-pointer"
                     >
                       Save
                     </button>
