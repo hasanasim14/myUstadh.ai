@@ -387,7 +387,7 @@ const CardOne = ({ selectedDocs, setSelectedDocs, onCollapseChange }) => {
     >
       {isCollapsed ? (
         // When collapsed: center the button in the entire card
-        <div className="flex justify-center pt-4">
+        <div className="flex justify-center p-3 border-b border-gray-200">
           <button
             className="cursor-pointer p-2 rounded-lg hover:bg-gray-200 text-[#64748b]"
             onClick={toggleCollapse}
@@ -399,12 +399,13 @@ const CardOne = ({ selectedDocs, setSelectedDocs, onCollapseChange }) => {
         // When expanded: show header + content
         <>
           {/* Header */}
-          <div className="flex items-center justify-between p-2">
+          <div className="card-header">
+            {/* <div className="flex items-center justify-between p-2"> */}
             <span className="title text-lg font-semibold">
               {cardData.title}
             </span>
             <button
-              className="cursor-pointer p-2 rounded-lg hover:bg-gray-200 text-[#64748b]"
+              className="cursor-pointer p-2 m-2 rounded-lg hover:bg-gray-200 text-[#64748b]"
               onClick={toggleCollapse}
             >
               <FiChevronLeft />

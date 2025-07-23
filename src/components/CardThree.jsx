@@ -285,7 +285,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
       }`}
     >
       {isCollapsed ? (
-        <div className="flex justify-center pt-4">
+        <div className="flex justify-center p-3 border-b border-gray-200">
           {/* // <div className="flex justify-end p-2"> */}
           <button
             className="cursor-pointer p-2 rounded-lg hover:bg-gray-200 text-[#64748b]"
