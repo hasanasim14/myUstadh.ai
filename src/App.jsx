@@ -1,134 +1,3 @@
-// import { useEffect, useState } from "react";
-// import { useLocation } from "react-router-dom";
-// import BottomNav from "./components/BottomNav";
-// import CardOne from "./components/CardOne";
-// import CardTwo from "./components/CardTwo";
-// import CardThree from "./components/CardThree";
-// import Navbar from "./components/Header";
-// import MarkdownViewer from "./components/MarkdownViewer";
-
-// export default function App() {
-//   const location = useLocation();
-//   const isMainApp = location.pathname === "/" || location.pathname === "/app";
-
-//   const [tab, setTab] = useState("content");
-//   const [selectedDocs, setSelectedDocs] = useState([]);
-//   const [notes, setNotes] = useState([]);
-//   // is collapsed state management
-//   const [isThirdCardCollapsed, setIsThirdCardCollapsed] = useState(false);
-//   const [isFirstCardCollapsed, setIsFirstCardCollapsed] = useState(false);
-
-//   useEffect(() => {
-//     // console.
-//     console.log("third card", isThirdCardCollapsed);
-//     console.log("First", isFirstCardCollapsed);
-//   }, [isThirdCardCollapsed, isFirstCardCollapsed]);
-
-//   const handleRightCardCollapse = (collapsed) => {
-//     setIsThirdCardCollapsed(collapsed);
-//   };
-
-//   const handleLeftCardCollapse = (collapsed) => {
-//     setIsFirstCardCollapsed(collapsed);
-//   };
-
-//   const handleAddPinnedNote = (question, answer) => {
-//     const newNote = {
-//       title: `Pinned: ${question.slice(0, 30)}...`,
-//       content: answer,
-//       editable: false,
-//     };
-//     setNotes((prev) => [...prev, newNote]);
-//   };
-
-//   if (!isMainApp) {
-//     return <MarkdownViewer />;
-//   }
-
-//   const getCardTwoColSpan = () => {
-//     const leftCollapsed = isFirstCardCollapsed;
-//     const rightCollapsed = isThirdCardCollapsed;
-
-//     if (leftCollapsed && rightCollapsed) return "col-span-12";
-//     if (leftCollapsed || rightCollapsed) return "col-span-9";
-
-//     return "col-span-6"; // default when both are visible
-//   };
-
-//   return (
-//     <div className="flex flex-col min-h-screen bg-white">
-//       <Navbar />
-
-//       {/* Mobile layout */}
-//       <div className="flex-1 overflow-y-auto md:hidden">
-//         {tab === "content" && (
-//           <CardOne
-//             selectedDocs={selectedDocs}
-//             setSelectedDocs={setSelectedDocs}
-//             onCollapseChange={handleLeftCardCollapse}
-//           />
-//         )}
-//         {tab === "chat" && (
-//           <CardTwo
-//             onPinNote={handleAddPinnedNote}
-//             selectedDocs={selectedDocs}
-//           />
-//         )}
-//         {tab === "library" && (
-//           <CardThree
-//             selectedDocs={selectedDocs}
-//             notes={notes}
-//             setNotes={setNotes}
-//             onCollapseChange={handleRightCardCollapse}
-//           />
-//         )}
-//       </div>
-
-//       <div className="md:hidden sticky bottom-0 z-10 bg-white">
-//         <BottomNav currentTab={tab} setTab={setTab} />
-//       </div>
-
-//       {/* Desktop layout */}
-//       <div className="hidden md:flex md:flex-1 md:flex-col p-4">
-//         <div className="grid grid-cols-12 gap-4 w-full">
-//           {/* <div className="grid grid-cols-10 gap-4 w-full"> */}
-//           {/* <div className="col-span-1"> */}
-//           <div className="col-span-3">
-//             <CardOne
-//               selectedDocs={selectedDocs}
-//               setSelectedDocs={setSelectedDocs}
-//               onCollapseChange={handleLeftCardCollapse}
-//             />
-//           </div>
-//           {/* <div className="col-span-6">
-//           <div className="col-span-6">
-//             <CardTwo
-//               onPinNote={handleAddPinnedNote}
-//               selectedDocs={selectedDocs}
-//             />
-//           </div> */}
-//           <div className={getCardTwoColSpan()}>
-//             <CardTwo
-//               onPinNote={handleAddPinnedNote}
-//               selectedDocs={selectedDocs}
-//             />
-//           </div>
-
-//           {/* <div className="col-span-1"> */}
-//           <div className="col-span-3">
-//             <CardThree
-//               selectedDocs={selectedDocs}
-//               notes={notes}
-//               setNotes={setNotes}
-//               onCollapseChange={handleRightCardCollapse}
-//             />
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import BottomNav from "./components/BottomNav";
@@ -147,11 +16,6 @@ export default function App() {
   const [notes, setNotes] = useState([]);
   const [isThirdCardCollapsed, setIsThirdCardCollapsed] = useState(false);
   const [isFirstCardCollapsed, setIsFirstCardCollapsed] = useState(false);
-
-  useEffect(() => {
-    console.log("Third card collapsed:", isThirdCardCollapsed);
-    console.log("First card collapsed:", isFirstCardCollapsed);
-  }, [isThirdCardCollapsed, isFirstCardCollapsed]);
 
   const handleRightCardCollapse = (collapsed) => {
     setIsThirdCardCollapsed(collapsed);
@@ -176,21 +40,21 @@ export default function App() {
 
     if (leftCollapsed && rightCollapsed) {
       return {
-        cardOne: "basis-[10%]",
-        cardTwo: "basis-[80%]",
-        cardThree: "basis-[10%]",
+        cardOne: "basis-[5%]",
+        cardTwo: "basis-[90%]",
+        cardThree: "basis-[5%]",
       };
     } else if (leftCollapsed) {
       return {
-        cardOne: "basis-[10%]",
-        cardTwo: "basis-[70%]",
+        cardOne: "basis-[5%]",
+        cardTwo: "basis-[75%]",
         cardThree: "basis-[20%]",
       };
     } else if (rightCollapsed) {
       return {
         cardOne: "basis-[20%]",
-        cardTwo: "basis-[70%]",
-        cardThree: "basis-[10%]",
+        cardTwo: "basis-[75%]",
+        cardThree: "basis-[5%]",
       };
     } else {
       return {
