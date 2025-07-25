@@ -79,33 +79,29 @@ export default function LoginForm() {
         backgroundImage: `url(${swirl})`,
       }}
     >
-      <div className="flex w-full max-w-4xl rounded-xl overflow-hidden shadow-xl">
-        {/* Left Quote Section - Transparent */}
-        <div className="hidden lg:flex w-1/2 items-center justify-center p-8 bg-transparent">
-          <div className="bg-white/10 backdrop-blur-sm border border-white rounded-xl p-10 text-white max-w-xs">
-            <p className="uppercase tracking-widest text-xs mb-2">
-              A Wise Quote
-            </p>
-            <h2 className="text-4xl font-bold leading-tight mb-4 font-serif">
-              Get
+      <div className="flex flex-col lg:flex-row w-[90vw] h-[90vh] max-w-4xl rounded-xl overflow-hidden shadow-xl">
+        {/* Left Quote Section */}
+        <div className="hidden lg:flex w-1/2 bg-transparent/10 backdrop-blur-md text-white p-10 flex-col justify-center rounded-l-xl libre-baskerville-regular">
+          <div className="max-w-md mx-auto">
+            <h2 className="text-4xl font-bold leading-tight mb-4">
+              Study Smarter,
               <br />
-              Everything
-              <br />
-              You Want
+              Not Harder
             </h2>
-            <p className="text-sm text-white/80 font-light">
-              You can get everything you want if you work hard, trust the
-              process, and stick to the plan.
+            <p className="text-sm text-black font-light">
+              "Success doesn’t come from what you do occasionally, it comes from
+              what you do consistently. Focus, learn, revise — and believe in
+              your potential."
             </p>
           </div>
         </div>
 
         {/* Right Login Form - White Background */}
-        <div className="w-full lg:w-1/2 p-8 bg-white">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        <div className="w-full lg:w-1/2 p-8 bg-white h-full flex flex-col justify-center rounded-r-xl">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center libre-baskerville-regular">
             Welcome Back
           </h2>
-          <p className="text-sm text-gray-600 mb-6">
+          <p className="text-sm text-gray-600 mb-6 text-center libre-baskerville-regular">
             Enter your email and password to sign in
           </p>
 
@@ -144,6 +140,7 @@ export default function LoginForm() {
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={handleChange}
+                  onKeyDown={handleKeyDown}
                   className={`mt-1 w-full px-3 py-2 pr-10 border rounded-md text-sm focus:outline-none focus:ring-2 ${
                     errors.password
                       ? "border-red-500 focus:ring-red-200"
@@ -174,7 +171,7 @@ export default function LoginForm() {
                 !!errors.email ||
                 isLoading
               }
-              className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-900 transition"
+              className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-900 transition cursor-pointer"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
