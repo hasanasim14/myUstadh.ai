@@ -75,7 +75,6 @@
 
 // }, 800);
 
-
 //       } catch (err) {
 //         console.error("Markdown fetch failed:", err);
 //         setContent("# Document not found");
@@ -147,12 +146,6 @@
 // export default MarkdownViewer;
 // THE ABOVE CODE WORKS FOR HIGHLIGHT OF THE DEEPEST SECTION/SUB SECTION/ SUB SUB SECTION THAT EXISTS - THIS DOESNT WORKS FOR HANDLING THE HIGHLIGHT OF THE SPECIFIC
 
-
-
-
-
-
-
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
@@ -165,46 +158,67 @@ import slugify from "slugify";
 // import "github-markdown-css";
 import "./MarkdownViewer.css";
 
-
 const SOURCE_MAP = {
-  "classroom-assessment-for-student-learning-jan-chappuis-et-al-second-edition":"Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
-  "measurement-and-assessment-in-teaching": "Measurement and Assessment in Teaching",
-  "a-review-of-multiple-choice-item-writing-guidelines-for-classroom-assessment":"A Review of Multiple-Choice Item-Writing Guidelines for Classroom Assessment",
-  "a-review-of-the-literature-on-marking-reliability":"**A REVIEW OF THE LITERATURE ON MARKING RELIABILITY**",
-  "a-teacher-s-guide-to-alternative-assessment": "A Teacher's Guide to Alternative Assessment:",
-  "can-a-picture-ruin-a-thousand-words-the-effects-of-visual-resources-in-exam-questions":"Can a picture ruin a thousand words?The effects of visual resources in exam questions",
-  "clarifying-the-purposes-of-educational-assessment":"Clarifying the purposes of educational assessment",
-  "clay-and-root-2001-is-this-a-trick-question-a-short-guide-to-writing-effective-test-questions":"Clay and Root (2001) Is This a Trick Question? A Short Guide to Writing Effective Test Questions**",
-  "criteria-comparison-and-past-experiences-how-do-teachers-make-judgements-when-marking-coursework":"Criteria, comparison and past experiences: how do teachers make judgements when marking coursework?",
-  "deficiency-contamination-and-the-signal-processing-metaphor":"Deficiency, Contamination, and the Signal Processing Metaphor",
+  "classroom-assessment-for-student-learning-jan-chappuis-et-al-second-edition":
+    "Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
+  "measurement-and-assessment-in-teaching":
+    "Measurement and Assessment in Teaching",
+  "a-review-of-multiple-choice-item-writing-guidelines-for-classroom-assessment":
+    "A Review of Multiple-Choice Item-Writing Guidelines for Classroom Assessment",
+  "a-review-of-the-literature-on-marking-reliability":
+    "**A REVIEW OF THE LITERATURE ON MARKING RELIABILITY**",
+  "a-teacher-s-guide-to-alternative-assessment":
+    "A Teacher's Guide to Alternative Assessment:",
+  "can-a-picture-ruin-a-thousand-words-the-effects-of-visual-resources-in-exam-questions":
+    "Can a picture ruin a thousand words?The effects of visual resources in exam questions",
+  "clarifying-the-purposes-of-educational-assessment":
+    "Clarifying the purposes of educational assessment",
+  "clay-and-root-2001-is-this-a-trick-question-a-short-guide-to-writing-effective-test-questions":
+    "Clay and Root (2001) Is This a Trick Question? A Short Guide to Writing Effective Test Questions**",
+  "criteria-comparison-and-past-experiences-how-do-teachers-make-judgements-when-marking-coursework":
+    "Criteria, comparison and past experiences: how do teachers make judgements when marking coursework?",
+  "deficiency-contamination-and-the-signal-processing-metaphor":
+    "Deficiency, Contamination, and the Signal Processing Metaphor",
   "does-washback-exist": "Does Washback Exist?",
-  "language-effects-in-international-testing-the-case-of-pisa-2006-science-items":"Language effects in international testing: the case of PISA 2006 science items",
-  "measurement-and-assessment-in-education-second-edition":"Measurement and Assessment in Education SECOND EDITION",
-  "macro-and-micro-validation-beyond-the-five-sources-framework-for-classifying-validation-evidence-and-analysis":"Macro- and Micro-Validation: Beyond the ‘Five Sources’ Framework for Classifying Validation Evidence and Analysis",
+  "language-effects-in-international-testing-the-case-of-pisa-2006-science-items":
+    "Language effects in international testing: the case of PISA 2006 science items",
+  "measurement-and-assessment-in-education-second-edition":
+    "Measurement and Assessment in Education SECOND EDITION",
+  "macro-and-micro-validation-beyond-the-five-sources-framework-for-classifying-validation-evidence-and-analysis":
+    "Macro- and Micro-Validation: Beyond the ‘Five Sources’ Framework for Classifying Validation Evidence and Analysis",
   "ongoing-issues-in-test-fairness": "Ongoing issues in test fairness",
-  "portfolio-purposes-teachers-exploring-the-relationshi-between-evaluation-an-learning":"Portfolio Purposes: Teachers Exploring the Relationshi Between Evaluation an Learning",
-  "scoring-rubrics-in-the-classroom-using-performance-criteria-for-assessing-and-improving-student-performance":"SCORING RUBRICS IN THE CLASSROOM: USING PERFORMANCE CRITERIA FOR AssESSING AND IMPROVING STUDENT PERFORMANCE",
-  "southeast-massouri-state-university-rubric-examples":"Southeast Massouri State University Rubric Examples",
-  "standards-for-educational-and-psychological-testing":"**STANDARDS for Educational and Psychological Testing",
-  "threats-to-the-valid-use-of-assessments": "Threats to the Valid Use of Assessments",
+  "portfolio-purposes-teachers-exploring-the-relationshi-between-evaluation-an-learning":
+    "Portfolio Purposes: Teachers Exploring the Relationshi Between Evaluation an Learning",
+  "scoring-rubrics-in-the-classroom-using-performance-criteria-for-assessing-and-improving-student-performance":
+    "SCORING RUBRICS IN THE CLASSROOM: USING PERFORMANCE CRITERIA FOR AssESSING AND IMPROVING STUDENT PERFORMANCE",
+  "southeast-massouri-state-university-rubric-examples":
+    "Southeast Massouri State University Rubric Examples",
+  "standards-for-educational-and-psychological-testing":
+    "**STANDARDS for Educational and Psychological Testing",
+  "threats-to-the-valid-use-of-assessments":
+    "Threats to the Valid Use of Assessments",
 };
 
 // Utility to strip markdown syntax
 const stripMarkdown = (markdown) => {
   return markdown
-    .replace(/!\[.*?\]\(.*?\)/g, "") 
-    .replace(/\*\*(.*?)\*\*/g, "$1") 
-    .replace(/\*(.*?)\*/g, "$1") 
-    .replace(/`{1,3}(.*?)`{1,3}/g, "$1") 
-    .replace(/[_~>#-]/g, "") 
-    .replace(/\n+/g, " ") 
-    .replace(/\s+/g, " ") 
+    .replace(/!\[.*?\]\(.*?\)/g, "")
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\*(.*?)\*/g, "$1")
+    .replace(/`{1,3}(.*?)`{1,3}/g, "$1")
+    .replace(/[_~>#-]/g, "")
+    .replace(/\n+/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
 };
 
 // Normalize text for matching
 const normalizeText = (text) =>
-  text.replace(/[*_~`>#+=\[\]()!\\-]+/g, "").replace(/\s+/g, " ").toLowerCase().trim();
+  text
+    .replace(/[*_~`>#+=\[\]()!\\-]+/g, "")
+    .replace(/\s+/g, " ")
+    .toLowerCase()
+    .trim();
 
 // Finds and highlights the chunk in the markdown
 const findAndHighlightChunk = (markdownText, chunkText) => {
@@ -214,7 +228,9 @@ const findAndHighlightChunk = (markdownText, chunkText) => {
   const index = normalizedMarkdown.indexOf(normalizedChunk);
   if (index !== -1) {
     // Simple match: break chunk into lines and wrap each line
-    const lines = chunkText.split(/\r?\n/).filter(line => line.trim().length > 0);
+    const lines = chunkText
+      .split(/\r?\n/)
+      .filter((line) => line.trim().length > 0);
     let highlightedText = markdownText;
 
     lines.forEach((line) => {
@@ -237,13 +253,11 @@ const findAndHighlightChunk = (markdownText, chunkText) => {
   return markdownText;
 };
 
-
 function MarkdownViewer() {
   const location = useLocation();
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
   const endpoint = import.meta.env.VITE_API_URL;
-
 
   useEffect(() => {
     const el = document.querySelector(".highlight-chunk");
@@ -256,74 +270,75 @@ function MarkdownViewer() {
 
   useEffect(() => {
     const fetchContent = async () => {
-  const fullPath = decodeURIComponent(location.pathname);
-  const match = fullPath.match(/^\/docs\/([^\/]+)/);
-  const bookSlug = match ? match[1] : null;
+      const fullPath = decodeURIComponent(location.pathname);
+      const match = fullPath.match(/^\/docs\/([^\/]+)/);
+      const bookSlug = match ? match[1] : null;
 
-  if (!bookSlug) {
-    setContent("# Document not found");
-    return;
-  }
-
-  const markdownUrl = `/docs/${bookSlug}.md`;
-  console.log("fetching:",markdownUrl)
-
-  try {
-    setLoading(true); // start loading
-
-    const res = await fetch(markdownUrl);
-    if (!res.ok) throw new Error("Markdown file not found");
-
-    let markdownText = await res.text();
-
-    const queryParams = new URLSearchParams(location.search);
-    const chunkId = queryParams.get("chunkid");
-
-    if (chunkId) {
-      const actualSourceName = SOURCE_MAP[bookSlug] || bookSlug;
-
-      const apiRes = await fetch(`${endpoint}/getchunk`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ source: actualSourceName, chunkid: chunkId }),
-      });
-
-      const json = await apiRes.json();
-
-      if (json.text) {
-        const highlighted = findAndHighlightChunk(markdownText, json.text);
-        setContent(highlighted);
-      } else {
-        setContent(markdownText);
+      if (!bookSlug) {
+        setContent("# Document not found");
+        return;
       }
-    } else {
-      setContent(markdownText);
-    }
-  } catch (err) {
-    console.error("Error loading content:", err);
-    setContent("# Document not found");
-  } finally {
-    setLoading(false); // end loading
-  }
-};
 
+      const markdownUrl = `/docs/${bookSlug}.md`;
+      console.log("fetching:", markdownUrl);
+
+      try {
+        setLoading(true); // start loading
+
+        const res = await fetch(markdownUrl);
+        if (!res.ok) throw new Error("Markdown file not found");
+
+        let markdownText = await res.text();
+
+        const queryParams = new URLSearchParams(location.search);
+        const chunkId = queryParams.get("chunkid");
+
+        if (chunkId) {
+          const actualSourceName = SOURCE_MAP[bookSlug] || bookSlug;
+
+          const apiRes = await fetch(`${endpoint}/getchunk`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              source: actualSourceName,
+              chunkid: chunkId,
+            }),
+          });
+
+          const json = await apiRes.json();
+
+          if (json.text) {
+            const highlighted = findAndHighlightChunk(markdownText, json.text);
+            setContent(highlighted);
+          } else {
+            setContent(markdownText);
+          }
+        } else {
+          setContent(markdownText);
+        }
+      } catch (err) {
+        console.error("Error loading content:", err);
+        setContent("# Document not found");
+      } finally {
+        setLoading(false); // end loading
+      }
+    };
 
     fetchContent();
   }, [location]);
 
   const extractText = (children) => {
-  if (typeof children === "string") return children;
-  if (Array.isArray(children)) return children.map(extractText).join("");
-  if (typeof children === "object" && children?.props?.children)
-    return extractText(children.props.children);
-  return "";
-};
+    if (typeof children === "string") return children;
+    if (Array.isArray(children)) return children.map(extractText).join("");
+    if (typeof children === "object" && children?.props?.children)
+      return extractText(children.props.children);
+    return "";
+  };
 
-const getSlug = (children) => {
-  const text = extractText(children);
-  return slugify(text, { lower: true, strict: true });
-};
-
+  const getSlug = (children) => {
+    const text = extractText(children);
+    return slugify(text, { lower: true, strict: true });
+  };
 
   const components = {
     h1: ({ node, ...props }) => <h1 id={getSlug(props.children)} {...props} />,
@@ -333,7 +348,12 @@ const getSlug = (children) => {
     code({ node, inline, className, children, ...props }) {
       const match = /language-(\w+)/.exec(className || "");
       return !inline && match ? (
-        <SyntaxHighlighter style={oneDark} language={match[1]} PreTag="div" {...props}>
+        <SyntaxHighlighter
+          style={oneDark}
+          language={match[1]}
+          PreTag="div"
+          {...props}
+        >
           {String(children).replace(/\n$/, "")}
         </SyntaxHighlighter>
       ) : (
@@ -345,26 +365,25 @@ const getSlug = (children) => {
   };
 
   return (
-  <div className="markdown-body" style={styles.wrapper}>
-    {loading ? (
-      <div style={styles.loaderContainer}>
-        <div className="spinner" />
-        <p>Loading document...</p>
-      </div>
-    ) : (
-      <ReactMarkdown
-        children={DOMPurify.sanitize(content, {
-          ADD_TAGS: ["span"],
-          ADD_ATTR: ["class"],
-        })}
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw]}
-        components={components}
-      />
-    )}
-  </div>
-);
-
+    <div className="markdown-body" style={styles.wrapper}>
+      {loading ? (
+        <div style={styles.loaderContainer}>
+          <div className="spinner" />
+          <p>Loading document...</p>
+        </div>
+      ) : (
+        <ReactMarkdown
+          children={DOMPurify.sanitize(content, {
+            ADD_TAGS: ["span"],
+            ADD_ATTR: ["class"],
+          })}
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeRaw]}
+          components={components}
+        />
+      )}
+    </div>
+  );
 }
 
 const styles = {
@@ -378,7 +397,7 @@ const styles = {
     boxShadow: "0 0 10px rgba(0,0,0,0.1)",
     fontSize: "16px",
     lineHeight: "1.7",
-    overflowX: 'hidden',
+    overflowX: "hidden",
   },
   loaderContainer: {
     display: "flex",
@@ -392,31 +411,3 @@ const styles = {
 };
 
 export default MarkdownViewer;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

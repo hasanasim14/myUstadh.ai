@@ -57,9 +57,9 @@ const AudioOverview = ({ selectedDocs }) => {
           console.log("Audio not ready yet. Will retry...");
         }
       } catch (err) {
-        console.error("Polling error:", err);
-        setError("Failed to fetch podcast audio.");
-        clearPolling();
+        console.error("Failed to generate podcast:", err);
+        localStorage.removeItem("Key"); // <-- clear the key here on API error
+        setError(err.message || "Failed to generate podcast");
         setLoading(false);
       }
     }, 30000); // every 30 seconds
