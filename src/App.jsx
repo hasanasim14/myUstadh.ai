@@ -70,8 +70,7 @@ export default function App() {
   if (!isMainApp) {
     return <MarkdownViewer />;
   }
-
-  return (
+  const renderMainApp = () => (
     <div className="flex flex-col min-h-screen bg-white">
       <Navbar />
 
@@ -135,5 +134,33 @@ export default function App() {
         </div>
       </div>
     </div>
+  );
+
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginForm />} />
+
+      <Route
+        path="/"
+        element={<ProtectedRoute>{renderMainApp()}</ProtectedRoute>}
+        // element={renderMainApp()}
+      />
+      <Route
+        path="/app"
+        element={<ProtectedRoute>{renderMainApp()}</ProtectedRoute>}
+        // element={renderMainApp()}
+      />
+      <Route
+        path="/docs"
+        element={
+          <ProtectedRoute>
+            <MarkdownViewer />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* fallback */}
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
   );
 }
