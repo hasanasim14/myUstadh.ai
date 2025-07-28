@@ -6,6 +6,7 @@ import CardTwo from "./components/CardTwo";
 import CardThree from "./components/CardThree";
 import Navbar from "./components/Header";
 import MarkdownViewer from "./components/MarkdownViewer";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 export default function App() {
   const location = useLocation();
