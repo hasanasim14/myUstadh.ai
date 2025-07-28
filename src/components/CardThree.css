@@ -19,7 +19,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* font-weight: 600; */
+  font-weight: 600;
   border-bottom: 1.5px solid rgb(226, 232, 240);
   margin: 0;
   border-top-right-radius: 10px;
@@ -83,7 +83,7 @@
 }
 
 .section-title {
-  /* font-weight: 600; */
+  font-weight: 600;
   margin-bottom: 8px;
   display: block;
 }
@@ -173,8 +173,7 @@
 }
 
 .modal-scroll::-webkit-scrollbar {
-  /* width: 8px; */
-  display: none;
+  width: 8px;
 }
 
 .modal-scroll::-webkit-scrollbar-track {
@@ -192,7 +191,7 @@
 }
 
 .modal-scroll {
-  /* scrollbar-width: thin; */
+  scrollbar-width: thin;
   scrollbar-color: rgba(46, 125, 50, 0.3) transparent;
 }
 
