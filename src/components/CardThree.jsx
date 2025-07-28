@@ -678,7 +678,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
           />
         </>
       )}
-      <button onClick={() => localStorage.clear()}>Clear</button>
     </div>
   );
 };
