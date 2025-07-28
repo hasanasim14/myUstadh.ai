@@ -6,13 +6,6 @@ import CardTwo from "./components/CardTwo";
 import CardThree from "./components/CardThree";
 import Navbar from "./components/Header";
 import MarkdownViewer from "./components/MarkdownViewer";
-import { Routes, Route, Navigate } from "react-router-dom";
-import LoginForm from "./components/LoginForm";
-
-const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
-  return token ? children : <Navigate to="/login" replace />;
-};
 
 export default function App() {
   const location = useLocation();
@@ -74,9 +67,14 @@ export default function App() {
 
   const { cardOne, cardTwo, cardThree } = getCardWidths();
 
-  const renderMainApp = () => (
+  if (!isMainApp) {
+    return <MarkdownViewer />;
+  }
+
+  return (
     <div className="flex flex-col min-h-screen bg-white">
       <Navbar />
+
       {/* Mobile layout */}
       <div className="flex-1 overflow-y-auto md:hidden">
         {tab === "content" && (
@@ -137,28 +135,5 @@ export default function App() {
         </div>
       </div>
     </div>
-  );
-
-  return (
-    <Routes>
-      <Route path="/login" element={<LoginForm />} />
-      <Route
-        path="/"
-        element={<ProtectedRoute>{renderMainApp()}</ProtectedRoute>}
-      />
-      <Route
-        path="/app"
-        element={<ProtectedRoute>{renderMainApp()}</ProtectedRoute>}
-      />
-      <Route
-        path="/docs"
-        element={
-          <ProtectedRoute>
-            <MarkdownViewer />
-          </ProtectedRoute>
-        }
-      />
-      {/* <Route path="*" element={<Navigate to="/" />} /> */}
-    </Routes>
   );
 }
