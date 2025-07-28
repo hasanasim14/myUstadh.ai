@@ -9,7 +9,7 @@ import {
 import ReactMarkdown from "react-markdown";
 import AudioOverview from "./AudioOverview";
 import axios from "axios";
-import MindmapModal from "./MindmapModal"; // adjust the path if needed
+import MindmapModal from "./MindmapModal";
 import {
   ChevronRight,
   Edit,
@@ -19,6 +19,7 @@ import {
   Network,
   Plus,
 } from "lucide-react";
+import remarkGfm from "remark-gfm";
 
 const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   // const [notes, setNotes] = useState([]);
@@ -41,6 +42,16 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const endpoint = import.meta.env.VITE_API_URL;
+
+  // better formatting for markdown
+  const renderers = {
+    h4: ({ children }) => (
+      <h4 style={{ fontWeight: "bold", marginTop: "1.5rem" }}>{children}</h4>
+    ),
+    p: ({ children }) => (
+      <p style={{ marginBottom: "1rem", lineHeight: 1.6 }}>{children}</p>
+    ),
+  };
 
   const noteTypes = [
     { label: "Study Guide", icon: GraduationCap },
@@ -584,6 +595,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
               </div>
             </div>
           )}
+
           {isViewModalOpen && currentViewNote && (
             <div
               className="modal-overlay"
@@ -602,33 +614,59 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
             >
               <div
                 ref={modalRef}
-                onClick={(e) => e.stopPropagation()} // Prevent click from closing modal
+                onClick={(e) => e.stopPropagation()}
                 className="modal-content modal-scroll"
                 style={{
                   width: "600px",
                   maxHeight: "80vh",
                   backgroundColor: "#fff",
-                  padding: "20px",
+                  padding: 0,
                   borderRadius: "10px",
-                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
                   overflowY: "auto",
                   scrollbarGutter: "stable",
                 }}
               >
-                <h3 style={{ marginTop: 0 }}>{currentViewNote.title}</h3>
-                <ReactMarkdown>
-                  {currentViewNote.content
-                    .replace(/\\n/g, "\n")
-                    .replace(/^"(.*)"$/, "$1")
-                    .replace(/^["']|["']$/g, "")}
-                </ReactMarkdown>
-                <div style={{ textAlign: "right", marginTop: "20px" }}>
+                {/* Sticky Header */}
+                <div
+                  style={{
+                    position: "sticky",
+                    top: 0,
+                    backgroundColor: "#fff",
+                    padding: "16px 20px",
+                    borderBottom: "1px solid #ccc",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    zIndex: 1,
+                  }}
+                >
+                  <h3 style={{ margin: 0 }}>{currentViewNote.title}</h3>
                   <button
                     onClick={() => setIsViewModalOpen(false)}
-                    style={{ backgroundColor: "blue" }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      fontSize: "1.5rem",
+                      cursor: "pointer",
+                      lineHeight: 1,
+                    }}
+                    aria-label="Close"
                   >
-                    Close
+                    &times;
                   </button>
+                </div>
+
+                {/* Markdown Content */}
+                <div style={{ padding: "20px" }}>
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={renderers}
+                  >
+                    {currentViewNote.content
+                      .replace(/\\n/g, "\n")
+                      .replace(/^"(.*)"$/, "$1")
+                      .replace(/^["']|["']$/g, "")}
+                  </ReactMarkdown>
                 </div>
               </div>
             </div>
@@ -640,6 +678,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
           />
         </>
       )}
+      <button onClick={() => localStorage.clear()}>Clear</button>
     </div>
   );
 };

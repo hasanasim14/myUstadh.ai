@@ -19,5 +19,5 @@
 }
 
 .library-button {
-  @apply flex items-center justify-center bg-[#f5f5f5] rounded-xl p-2 text-sm font-semibold cursor-pointer border border-gray-200 hover:bg-[#e0e0e0];
+  @apply flex items-center justify-center bg-[#f5f5f5] rounded-xl p-2 text-sm cursor-pointer border border-gray-200 hover:bg-[#e0e0e0];
 }

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 // import swirl from "../assets/login-image.jpg";
+import swirl from "../assets/login-image.jpg";
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ export default function LoginForm() {
   return (
     <div
       className="min-h-screen w-full bg-cover bg-center bg-no-repeat flex items-center justify-center p-4"
-      //   style={{ backgroundImage: `url(${swirl})` }}
+      style={{ backgroundImage: `url(${swirl})` }}
     >
       <div className="flex flex-col lg:flex-row w-[90vw] h-[90vh] max-w-4xl rounded-xl overflow-hidden shadow-xl">
         {/* Left */}
