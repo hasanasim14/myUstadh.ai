@@ -74,13 +74,9 @@ export default function App() {
 
   const { cardOne, cardTwo, cardThree } = getCardWidths();
 
-  if (!isMainApp) {
-    return <MarkdownViewer />;
-  }
   const renderMainApp = () => (
     <div className="flex flex-col min-h-screen bg-white">
       <Navbar />
-
       {/* Mobile layout */}
       <div className="flex-1 overflow-y-auto md:hidden">
         {tab === "content" && (
@@ -146,16 +142,13 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginForm />} />
-
       <Route
         path="/"
         element={<ProtectedRoute>{renderMainApp()}</ProtectedRoute>}
-        // element={renderMainApp()}
       />
       <Route
         path="/app"
         element={<ProtectedRoute>{renderMainApp()}</ProtectedRoute>}
-        // element={renderMainApp()}
       />
       <Route
         path="/docs"
@@ -165,8 +158,6 @@ export default function App() {
           </ProtectedRoute>
         }
       />
-
-      {/* fallback */}
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
