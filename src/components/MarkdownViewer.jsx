@@ -159,81 +159,44 @@ import slugify from "slugify";
 import "./MarkdownViewer.css";
 
 const SOURCE_MAP = {
-  "topic-1-module-introduction": "Topic 1 – Module introduction",
-  "criminal-law-induction-oct-2024": "Criminal law Induction (Oct 2024)",
-
-  "topic-2-understanding-the-building-blocks-of-criminal-liability":
-    "Topic 2 - Understanding the building blocks of criminal liability",
-
-  "topic-3-actus-reus-conduct-and-circumstances":
-    "Topic 3 - Actus reus: conduct and circumstances",
-  "actus-reus": "Actus Reus",
-
-  "topic-4-actus-reus-consequences-and-their-causes":
-    "Topic 4 - Actus reus: consequences and their causes",
-  "the-chain-of-causation": "The Chain of Causation",
-  "how-can-the-chain-of-causation-be-broken":
-    "How can the chain of causation be broken?",
-
-  "topic-5-mens-rea-criminal-fault": "Topic 5 - Mens rea: criminal fault",
-  "mens-rea-proving-fault": "Mens Rea – Proving Fault",
-  "intention-in-the-criminal-law": "Intention in the Criminal Law",
-
-  "topic-6-coincidence-of-actus-reus-and-mens-rea":
-    "Topic 6 – Coincidence of actus reus and mens rea",
-  "miller-how-case-law-develops": "Miller – How case law develops",
-  "coincidence-of-actus-reus-and-mens-rea":
-    "Coincidence of actus reus and mens rea",
-
-  "topic-7-criminal-homicide": "Topic 7 - Criminal homicide",
-  "murder-and-partial-defences": "Murder and partial defences",
-  "criminal-law-involuntary-manslaughter":
-    "Criminal Law: Involuntary Manslaughter",
-  "whats-wrong-with-murder": "What's Wrong with Murder",
-  "whats-wrong-with-murder-2": "What's Wrong with Murder",
-
-  "topic-8-rape": "Topic 8 - Rape",
-  "rape-the-basic-elements": "Rape: The Basic Elements",
-  "consent-and-sexual-offences": "Consent and sexual offences",
-
-  "topic-9-non-fatal-offences-against-the-person":
-    "Topic 9 - Non-fatal offences against the person",
-  "the-forms-of-non-fatal-offences-common-assault":
-    "The Forms of Non Fatal Offences: Common Assault",
-  "non-fatal-offences": "Non fatal offences",
-  "tackling-multi-part-problem-questions":
-    "Tackling multi-part problem questions",
-
-  "topic-10-defences-1-failure-of-proof":
-    "Topic 10 - Defences 1: failure of proof",
-  "general-defences-1-introduction-and-failure-of-proof-defences-professor-william-wilson":
-    "General defences 1 Introduction and Failure of Proof Defences Professor William Wilson",
-  "failure-of-proof-defences": "Failure of proof defences",
-  intoxication: "Intoxication",
-
-  "topic-11-defences-2-affirmative-defences":
-    "Topic 11 – Defences 2: affirmative defences",
-  "affirmative-defences": "Affirmative Defences",
-  duress: "Duress",
-
-  "topic-12-property-offences-1-theft-and-burglary":
-    "Topic 12 - Property offences 1: theft and burglary",
-  "property-offences-1-theft": "Property Offences 1: Theft",
-  "theft-appropriating-property": "Theft: Appropriating Property",
-
-  "topic-13-property-offences-2-fraud-and-making-off-without-payment":
-    "Topic 13 - Property offences 2: fraud and making off without payment",
-  fraud: "Fraud",
-
-  "topic-14-property-offences-3-criminal-damage":
-    "Topic 14 - Property offences 3: criminal damage",
-  "criminal-damage-the-conduct-element": "Criminal Damage: The Conduct Element",
-  "the-fault-element-in-criminal-damage":
-    "The Fault Element in Criminal Damage",
-
-  "criminal-law": "**Criminal law**",
-  "la1010-criminal-law-pre-exam-update-2025":
-    "LA1010 Criminal law Pre-exam update 2025",
+  "classroom-assessment-for-student-learning-jan-chappuis-et-al-second-edition":
+    "Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
+  "measurement-and-assessment-in-teaching":
+    "Measurement and Assessment in Teaching",
+  "a-review-of-multiple-choice-item-writing-guidelines-for-classroom-assessment":
+    "A Review of Multiple-Choice Item-Writing Guidelines for Classroom Assessment",
+  "a-review-of-the-literature-on-marking-reliability":
+    "**A REVIEW OF THE LITERATURE ON MARKING RELIABILITY**",
+  "a-teacher-s-guide-to-alternative-assessment":
+    "A Teacher's Guide to Alternative Assessment:",
+  "can-a-picture-ruin-a-thousand-words-the-effects-of-visual-resources-in-exam-questions":
+    "Can a picture ruin a thousand words?The effects of visual resources in exam questions",
+  "clarifying-the-purposes-of-educational-assessment":
+    "Clarifying the purposes of educational assessment",
+  "clay-and-root-2001-is-this-a-trick-question-a-short-guide-to-writing-effective-test-questions":
+    "Clay and Root (2001) Is This a Trick Question? A Short Guide to Writing Effective Test Questions**",
+  "criteria-comparison-and-past-experiences-how-do-teachers-make-judgements-when-marking-coursework":
+    "Criteria, comparison and past experiences: how do teachers make judgements when marking coursework?",
+  "deficiency-contamination-and-the-signal-processing-metaphor":
+    "Deficiency, Contamination, and the Signal Processing Metaphor",
+  "does-washback-exist": "Does Washback Exist?",
+  "language-effects-in-international-testing-the-case-of-pisa-2006-science-items":
+    "Language effects in international testing: the case of PISA 2006 science items",
+  "measurement-and-assessment-in-education-second-edition":
+    "Measurement and Assessment in Education SECOND EDITION",
+  "macro-and-micro-validation-beyond-the-five-sources-framework-for-classifying-validation-evidence-and-analysis":
+    "Macro- and Micro-Validation: Beyond the ‘Five Sources’ Framework for Classifying Validation Evidence and Analysis",
+  "ongoing-issues-in-test-fairness": "Ongoing issues in test fairness",
+  "portfolio-purposes-teachers-exploring-the-relationshi-between-evaluation-an-learning":
+    "Portfolio Purposes: Teachers Exploring the Relationshi Between Evaluation an Learning",
+  "scoring-rubrics-in-the-classroom-using-performance-criteria-for-assessing-and-improving-student-performance":
+    "SCORING RUBRICS IN THE CLASSROOM: USING PERFORMANCE CRITERIA FOR AssESSING AND IMPROVING STUDENT PERFORMANCE",
+  "southeast-massouri-state-university-rubric-examples":
+    "Southeast Massouri State University Rubric Examples",
+  "standards-for-educational-and-psychological-testing":
+    "**STANDARDS for Educational and Psychological Testing",
+  "threats-to-the-valid-use-of-assessments":
+    "Threats to the Valid Use of Assessments",
 };
 
 // Utility to strip markdown syntax
