@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FiInfo } from "react-icons/fi";
 import "./CardThree.css";
 import "./AudioOverview.css";
@@ -9,6 +9,7 @@ const AudioOverview = ({ selectedDocs }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
+  const pollingIntervalRef = useRef(null);
   const endpoint = import.meta.env.VITE_API_URL;
 
   const languages = ["English", "Urdu", "Punjabi", "Sindhi", "Pashto"];
@@ -23,16 +24,61 @@ const AudioOverview = ({ selectedDocs }) => {
 
   // this function handles the click event for generating the podcast
   // it sends a POST request to the backend with the selected language and documents
+
+  const clearPolling = () => {
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+  };
+
+  const pollForPodcast = (key) => {
+    pollingIntervalRef.current = setInterval(async () => {
+      try {
+        const response = await fetch(`${endpoint}/fetch/podcast/${key}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (!response.ok)
+          throw new Error(`Polling failed: ${response.statusText}`);
+
+        const contentType = response.headers.get("Content-Type");
+        if (contentType && contentType.includes("audio")) {
+          const blob = await response.blob();
+          const audioObjectUrl = URL.createObjectURL(blob);
+          setAudioUrl(audioObjectUrl);
+          setLoading(false);
+          clearPolling();
+          localStorage.removeItem("Key");
+        } else {
+          console.log("Audio not ready yet. Will retry...");
+        }
+      } catch (err) {
+        console.error("Polling error:", err);
+        setError("Failed to fetch podcast audio.");
+        clearPolling();
+        setLoading(false);
+      }
+    }, 30000); // every 30 seconds
+  };
+
   const handleGenerateClick = async () => {
+    localStorage.removeItem("Key"); // remove previous session key
     setLoading(true);
     setError(null);
-    setAudioUrl(null); // reset
+    setAudioUrl(null);
+    clearPolling(); // just in case
 
     try {
-      const response = await fetch(`${endpoint}/podcast`, {
+      const response = await fetch(`${endpoint}/v1/podcast`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           session_id: sessionId,
@@ -41,20 +87,30 @@ const AudioOverview = ({ selectedDocs }) => {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`API error: ${response.statusText}`);
-      }
+      if (!response.ok) throw new Error(`API error: ${response.statusText}`);
 
-      const blob = await response.blob();
-      const audioObjectUrl = URL.createObjectURL(blob);
-      setAudioUrl(audioObjectUrl);
+      const data = await response.json();
+      const key = data?.data;
+      if (!key) throw new Error("Invalid response from server.");
+
+      localStorage.setItem("Key", key);
+      pollForPodcast(key);
     } catch (err) {
       console.error("Failed to generate podcast:", err);
       setError(err.message || "Failed to generate podcast");
-    } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const key = localStorage.getItem("Key");
+    if (key) {
+      setLoading(true);
+      pollForPodcast(key);
+    }
+
+    return () => clearPolling(); // clean up when component unmounts
+  }, []);
 
   return (
     <div className="audio-overview">
@@ -116,7 +172,7 @@ const AudioOverview = ({ selectedDocs }) => {
         <button
           className="flex items-center justify-center bg-[#4259ff] text-white rounded-xl p-2 text-sm font-semibold cursor-pointer hover:bg-[#3a4bda] w-full"
           onClick={handleGenerateClick}
-          disabled={loading}
+          disabled={loading || selectedDocs.length === 0}
         >
           {loading ? (
             <div

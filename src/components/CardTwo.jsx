@@ -1,13 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiRefreshCw } from "react-icons/fi";
 import DocChat from "./DocChat";
 import "./CardTwo.css";
+import { Trash } from "lucide-react";
 
 const CardTwo = ({ onPinNote, selectedDocs }) => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasSession, setHasSession] = useState(false);
+
+  useEffect(() => {
+    const isSession = localStorage.getItem("session_id");
+    if (isSession) {
+      setHasSession(true);
+    }
+    console.log("setting the session");
+  }, []);
 
   const handleRefresh = () => {
-    setRefreshTrigger((prev) => prev + 1); // Increment to trigger Chat reset
+    setRefreshTrigger((prev) => prev + 1);
+    localStorage.removeItem("session_id");
+    // setHasSession(false);
   };
 
   return (
@@ -15,12 +28,21 @@ const CardTwo = ({ onPinNote, selectedDocs }) => {
       <div className="card-header">
         <span className="title">AI Chat</span>
         <div
-          className="refresh-container hover:bg-gray-200 rounded-lg p-2 mr-2"
-          onClick={handleRefresh}
-          style={{ cursor: "pointer" }}
+          className="refresh-container hover:bg-gray-200 rounded-lg p-2 mr-2 cursor-pointer"
+          onClick={() => {
+            if (!hasSession || isLoading) return;
+            handleRefresh();
+          }}
+          title={
+            !hasSession
+              ? "No session to clear"
+              : isLoading
+              ? "Please wait until response finishes"
+              : "Clear chat session"
+          }
         >
-          <FiRefreshCw className="refresh-icon" />
-          <span className="refresh-text">Refresh</span>
+          <Trash className="refresh-icon" />
+          <span className="refresh-text">Clear</span>
         </div>
       </div>
       <div className="card-content">
@@ -28,6 +50,7 @@ const CardTwo = ({ onPinNote, selectedDocs }) => {
           refreshTrigger={refreshTrigger}
           onPinNote={onPinNote}
           selectedDocs={selectedDocs}
+          setIsLoading={setIsLoading}
         />
       </div>
     </div>

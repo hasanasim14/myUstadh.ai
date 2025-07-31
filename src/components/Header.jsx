@@ -1,11 +1,14 @@
-import { Bell, Languages, Menu, User, UserCircle, X } from "lucide-react";
 import { useState, useEffect } from "react";
-import { FaSearch, FaTimes, FaBars, FaBell, FaGlobe } from "react-icons/fa";
+import { Bell, Languages, LogOut, Menu, User, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -20,6 +23,14 @@ const Navbar = () => {
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    toast.success("Logged out successfully");
+    setTimeout(() => {
+      navigate("/login");
+    }, 500);
   };
 
   return (
@@ -70,9 +81,29 @@ const Navbar = () => {
                 <Bell className="w-4 h-4" />
               </button>
 
-              <button className="cursor-pointer bg-[#f5f5f5] hover:bg-[#e5e5e5] text-gray-800 p-2 rounded-full border border-gray-300 shadow-sm transition duration-200">
-                <User className="w-4 h-4" />
-              </button>
+              <div className="relative inline-block text-left z-50">
+                <button
+                  onClick={() => setShowUserMenu((prev) => !prev)}
+                  className="cursor-pointer bg-[#f5f5f5] hover:bg-[#e5e5e5] text-gray-800 p-2 rounded-full border border-gray-300 shadow-sm transition duration-200"
+                >
+                  <User className="w-4 h-4" />
+                </button>
+
+                {showUserMenu && (
+                  <div
+                    className="absolute right-0 mt-2 min-w-[180px] max-w-[220px] bg-white text-black rounded-xl shadow-xl border border-gray-200 overflow-hidden"
+                    style={{ overflowWrap: "break-word" }} // ensure long content wraps
+                  >
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-x-2 px-4 py-3 hover:bg-red-100 transition text-sm text-red-500 cursor-pointer"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span className="font-mono">Logout</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </>
           )}
 

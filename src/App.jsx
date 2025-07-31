@@ -6,10 +6,21 @@ import CardTwo from "./components/CardTwo";
 import CardThree from "./components/CardThree";
 import Navbar from "./components/Header";
 import MarkdownViewer from "./components/MarkdownViewer";
+import { Routes, Route, Navigate } from "react-router-dom";
+import LoginForm from "./components/LoginForm";
+import CourseCatalog from "./components/CourseraTiles";
+
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  return token ? children : <Navigate to="/login" replace />;
+};
 
 export default function App() {
   const location = useLocation();
-  const isMainApp = location.pathname === "/" || location.pathname === "/app";
+  const isMainApp =
+    location.pathname === "/" ||
+    location.pathname === "/login" ||
+    location.pathname === "/coursera";
 
   const [tab, setTab] = useState("content");
   const [selectedDocs, setSelectedDocs] = useState([]);
@@ -65,16 +76,15 @@ export default function App() {
     }
   };
 
-  const { cardOne, cardTwo, cardThree } = getCardWidths();
-
   if (!isMainApp) {
     return <MarkdownViewer />;
   }
 
-  return (
+  const { cardOne, cardTwo, cardThree } = getCardWidths();
+
+  const renderMainApp = () => (
     <div className="flex flex-col min-h-screen bg-white">
       <Navbar />
-
       {/* Mobile layout */}
       <div className="flex-1 overflow-y-auto md:hidden">
         {tab === "content" && (
@@ -135,5 +145,29 @@ export default function App() {
         </div>
       </div>
     </div>
+  );
+
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginForm />} />
+      <Route
+        path="/"
+        element={<ProtectedRoute>{renderMainApp()}</ProtectedRoute>}
+      />
+      <Route
+        path="/app"
+        element={<ProtectedRoute>{renderMainApp()}</ProtectedRoute>}
+      />
+      <Route
+        path="/coursera"
+        element={
+          <ProtectedRoute>
+            <CourseCatalog />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
   );
 }

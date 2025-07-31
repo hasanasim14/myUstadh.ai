@@ -39,10 +39,12 @@ const Chat = ({ refreshTrigger, onPinNote }) => {
     }
 
     try {
-      // const response = await fetch("http://localhost:8000/generate-audio/", {
       const response = await fetch(`${endpoint}/generate-audio`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `bearer ${localStorage.getItem("token")}`,
+        },
         body: JSON.stringify({ text }),
       });
 
@@ -121,6 +123,10 @@ const Chat = ({ refreshTrigger, onPinNote }) => {
             const endpoint = import.meta.env.VITE_API_URL;
             const response = await fetch(`${endpoint}/transcribe`, {
               method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `bearer ${localStorage.getItem("token")}`,
+              },
               body: formData,
             });
 
@@ -193,7 +199,10 @@ const Chat = ({ refreshTrigger, onPinNote }) => {
       const endpoint = import.meta.env.VITE_API_URL;
       const response = await fetch(`${endpoint}/ask`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `bearer ${localStorage.getItem("token")}`,
+        },
         body: JSON.stringify(payload),
       });
 

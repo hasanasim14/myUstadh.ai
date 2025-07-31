@@ -3,8 +3,9 @@ import { FaUser, FaRobot } from "react-icons/fa";
 import { Pin, Headphones, Mic, SendHorizonal, Copy } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import "./DocChat.css";
+import remarkGfm from "remark-gfm";
 
-const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
+const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
   const initialBotMessage = {
     from: "bot",
     text: "Hi there! I'm StudyBot, your AI study assistant. How can I help you today?",
@@ -27,8 +28,50 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
 
   const endpoint = import.meta.env.VITE_API_URL;
 
+  // check for session id for get chat api
   useEffect(() => {
-    setMessages([initialBotMessage]);
+    const sessionId = localStorage.getItem("session_id");
+
+    if (!sessionId) {
+      setMessages([initialBotMessage]);
+      return;
+    }
+
+    const fetchChats = async () => {
+      try {
+        const response = await fetch(`${endpoint}/get-chats/${sessionId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch chat history");
+
+        const data = await response.json();
+
+        if (data.success && Array.isArray(data.data)) {
+          const formattedMessages = data.data.map((item) => ({
+            from: item.type.toLowerCase() === "user" ? "user" : "bot",
+            text: item.content,
+            time: new Date(item.ts).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          }));
+
+          setMessages((prev) => [initialBotMessage, ...formattedMessages]);
+        } else {
+          setMessages([initialBotMessage]);
+        }
+      } catch (err) {
+        console.error("Error fetching chats:", err);
+        setMessages([initialBotMessage]);
+      }
+    };
+
+    fetchChats();
   }, [refreshTrigger]);
 
   const playNoteAudioFromAPI = async (text, index) => {
@@ -48,7 +91,10 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
       console.log("the endpoint being called is", `${endpoint}/generate-audio`);
       const response = await fetch(`${endpoint}/generate-audio/`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `bearer ${localStorage.getItem("token")}`,
+        },
         body: JSON.stringify({ text }),
       });
 
@@ -112,6 +158,10 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
           try {
             const response = await fetch(`${endpoint}/transcribe`, {
               method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `bearer ${localStorage.getItem("token")}`,
+              },
               body: formData,
             });
 
@@ -153,6 +203,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
 
     setMessages((prev) => [...prev, userMessage, loadingMessage]);
     setInput("");
+    setIsLoading(true);
 
     try {
       const conversationHistory = [];
@@ -172,7 +223,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
         answer: null,
       });
 
-      const sessionId = sessionStorage.getItem("session_id") || "";
+      const sessionId = localStorage.getItem("session_id") || "";
 
       const payload = {
         question: userInput,
@@ -193,14 +244,20 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
       if (!selectedDocs || selectedDocs.length === 0) {
         response = await fetch(`${endpoint}/ask`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `bearer ${localStorage.getItem("token")}`,
+          },
           body: JSON.stringify(payload),
         });
       } else {
         console.log("Selected Docs being sent:", selectedDocs);
         response = await fetch(`${endpoint}/query_with_filter`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `bearer ${localStorage.getItem("token")}`,
+          },
           body: JSON.stringify(filterpayload),
         });
       }
@@ -208,7 +265,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
       const data = await response.json();
 
       if (data.session_id) {
-        sessionStorage.setItem("session_id", data.session_id);
+        localStorage.setItem("session_id", data.session_id);
       }
 
       console.log("Session Id:", data.session_id);
@@ -244,6 +301,8 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
           },
         ];
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -284,6 +343,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
               >
                 {typeof msg.text === "string" ? (
                   <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
                     components={{
                       a: ({ node, ...props }) => (
                         <a
@@ -292,6 +352,19 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
                           rel="noopener noreferrer"
                           className="text-blue-600 underline"
                         />
+                      ),
+                      table: ({ node, ...props }) => (
+                        <table className="table-auto border border-collapse border-gray-300 my-4">
+                          {props.children}
+                        </table>
+                      ),
+                      th: ({ node, ...props }) => (
+                        <th className="border px-4 py-2 bg-gray-100 text-left">
+                          {props.children}
+                        </th>
+                      ),
+                      td: ({ node, ...props }) => (
+                        <td className="border px-4 py-2">{props.children}</td>
                       ),
                     }}
                   >
@@ -351,7 +424,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote }) => {
 
       <div className="flex pr-4">
         <input
-          // className="w-[100]"
+          className="chat-message-input"
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
