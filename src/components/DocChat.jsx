@@ -25,6 +25,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const streamRef = useRef(null);
+  const abortControllers = useRef({});
 
   const endpoint = import.meta.env.VITE_API_URL;
 
@@ -74,9 +75,18 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
     fetchChats();
   }, [refreshTrigger]);
 
+  // api to generate audio
   const playNoteAudioFromAPI = async (text, index) => {
-    console.log("in the audio method");
-    setClickedIndex(index);
+    if (clickedIndex === index && !playingIndex) {
+      const controller = abortControllers.current[index];
+      if (controller) {
+        controller.abort();
+        delete abortControllers.current[index];
+      }
+      setClickedIndex(null);
+      return;
+    }
+
     if (playingIndex === index) {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -87,16 +97,24 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
       return;
     }
 
+    const controller = new AbortController();
+    abortControllers.current[index] = controller;
+    setClickedIndex(index);
+
     try {
-      console.log("the endpoint being called is", `${endpoint}/generate-audio`);
       const response = await fetch(`${endpoint}/generate-audio/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({ text }),
+        signal: controller.signal,
       });
+
+      if (!response.ok) {
+        throw new Error(`API call failed with status ${response.status}`);
+      }
 
       const audioBlob = await response.blob();
       const audioUrl = URL.createObjectURL(audioBlob);
@@ -115,9 +133,15 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
 
       await audio.play();
     } catch (error) {
-      console.error("Audio playback failed:", error);
+      if (error.name === "AbortError") {
+        console.log("Fetch aborted");
+      } else {
+        console.error("Audio playback failed:", error);
+      }
       setPlayingIndex(null);
       setClickedIndex(null);
+    } finally {
+      delete abortControllers.current[index];
     }
   };
 
@@ -228,19 +252,18 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
       const payload = {
         question: userInput,
         timestamp: new Date().toISOString(),
-        session_id: sessionId, // ✅ Add this line
+        session_id: sessionId,
         conversation: conversationHistory,
       };
       const filterpayload = {
         question: payload.question,
         timestamp: payload.timestamp,
         conversation: payload.conversation,
-        session_id: sessionId, // ✅ Add this line
+        session_id: sessionId,
         selectedDocs: selectedDocs,
       };
 
       let response;
-      console.log("API Endpoint:", import.meta.env.VITE_API_URL);
       if (!selectedDocs || selectedDocs.length === 0) {
         response = await fetch(`${endpoint}/ask`, {
           method: "POST",
@@ -251,7 +274,6 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
           body: JSON.stringify(payload),
         });
       } else {
-        console.log("Selected Docs being sent:", selectedDocs);
         response = await fetch(`${endpoint}/query_with_filter`, {
           method: "POST",
           headers: {
@@ -267,9 +289,6 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
       if (data.session_id) {
         localStorage.setItem("session_id", data.session_id);
       }
-
-      console.log("Session Id:", data.session_id);
-      console.log("Response from API:", data);
 
       const botReply =
         data?.reply || "Thanks for your message! I am working on it.";

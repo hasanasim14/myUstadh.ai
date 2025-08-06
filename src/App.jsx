@@ -38,8 +38,8 @@ export default function App() {
 
   const handleAddPinnedNote = (question, answer) => {
     const newNote = {
-      title: `Pinned: ${question.slice(0, 30)}...`,
-      content: answer,
+      Title: `Pinned: ${question.slice(0, 30)}...`,
+      Response: answer,
       editable: false,
     };
     setNotes((prev) => [...prev, newNote]);

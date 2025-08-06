@@ -39,7 +39,7 @@ const Navbar = () => {
         <div className="flex items-center space-x-6">
           <span className="text-2xl font-bold tracking-wide">myUstad.ai</span>
 
-          {!isMobile && (
+          {/* {!isMobile && (
             <div className="flex-grow mx-6">
               <input
                 type="text"
@@ -49,7 +49,7 @@ const Navbar = () => {
                 className="w-[20vw] max-w-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400 text-sm"
               />
             </div>
-          )}
+          )} */}
         </div>
 
         {!isMobile && (

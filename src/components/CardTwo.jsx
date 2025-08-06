@@ -14,7 +14,6 @@ const CardTwo = ({ onPinNote, selectedDocs }) => {
     if (isSession) {
       setHasSession(true);
     }
-    console.log("setting the session");
   }, []);
 
   const handleRefresh = () => {
