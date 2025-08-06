@@ -36,13 +36,33 @@ export default function App() {
     setIsFirstCardCollapsed(collapsed);
   };
 
-  const handleAddPinnedNote = (question, answer) => {
+  const handleAddPinnedNote = async (question, answer) => {
+    const endpoint = import.meta.env.VITE_API_URL;
+    console.log("inside the handleAddPinnedNote");
     const newNote = {
       Title: `Pinned: ${question.slice(0, 30)}...`,
       Response: answer,
       editable: false,
     };
     setNotes((prev) => [...prev, newNote]);
+
+    // saving note before sending
+    try {
+      const authToken = localStorage.getItem("token");
+      const res = await fetch(`${endpoint}/save-note`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          title: newNote.Title,
+          note: newNote.Response,
+        }),
+      });
+    } catch (error) {
+      console.error("unable to save the pinned note ", error);
+    }
   };
 
   const getCardWidths = () => {

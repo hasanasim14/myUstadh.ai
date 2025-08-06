@@ -71,6 +71,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
       });
 
       const data = await res.json();
+      console.log("the notes inside the get useEffect ", data?.data);
       setNotes(data?.data);
     } catch (error) {
       console.error("Error fetching notes:", error);
@@ -94,15 +95,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
           },
         }
       );
-
-      // const response = await fetch(`${endpoint}/generate-mindmap`,{
-      //   method:"POST",
-      //   headers{
-      //     "Content-Type":"application/json",
-      //     Authorization:`Bearer ${localStorage.getItem("token")}`
-      //   },
-      //   body:JSON.stringify({selected})
-      // })
 
       const markdownContent = response.data.markdown || "No mindmap available.";
 
@@ -445,7 +437,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                   Generating...
                 </div>
               )}
-              {console.log("the notes are s", notes)}
               {/* Starting onwards here is the code of when the notes get created whenn you click on the add a note button and the functionality of it being edittable */}
               <div className="notes-scroll-container border-t border-gray-200 px-1 py-4 lg:h-[350px] overflow-y-auto">
                 {/* <div className="notes-scroll-container border-t border-gray-200 px-1 py-4 md:h-[10px] lg:h-[350px]"> */}
