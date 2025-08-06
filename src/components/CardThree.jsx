@@ -36,6 +36,8 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const endpoint = import.meta.env.VITE_API_URL;
 
+  console.log("the notes", notes);
+
   // better formatting for markdown
   const renderers = {
     h4: ({ children }) => (
@@ -78,10 +80,29 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   // function added to fetch the mindmap from the backend when the user clicks on the Mind Map button
   const fetchMindmap = async () => {
     setLoading(true);
+    const authToken = localStorage.getItem("token");
+    console.log("the token", authToken);
     try {
-      const response = await axios.post(`${endpoint}/generate-mindmap`, {
-        selectedDocs: selectedDocs,
-      });
+      const response = await axios.post(
+        `${endpoint}/generate-mindmap`,
+        {
+          selectedDocs: selectedDocs,
+        },
+        {
+          headers: {
+            Authorization: `bearer ${authToken}`,
+          },
+        }
+      );
+
+      // const response = await fetch(`${endpoint}/generate-mindmap`,{
+      //   method:"POST",
+      //   headers{
+      //     "Content-Type":"application/json",
+      //     Authorization:`Bearer ${localStorage.getItem("token")}`
+      //   },
+      //   body:JSON.stringify({selected})
+      // })
 
       const markdownContent = response.data.markdown || "No mindmap available.";
 
@@ -303,7 +324,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
       const titleData = rawTitle.replace(/^"(.*)"$/, "$1");
 
       const newNote = {
-        title: titleData,
+        Title: titleData,
         content: content || "No content available.",
         editable: false,
       };
@@ -424,6 +445,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                   Generating...
                 </div>
               )}
+              {console.log("the notes are s", notes)}
               {/* Starting onwards here is the code of when the notes get created whenn you click on the add a note button and the functionality of it being edittable */}
               <div className="notes-scroll-container border-t border-gray-200 px-1 py-4 lg:h-[350px] overflow-y-auto">
                 {/* <div className="notes-scroll-container border-t border-gray-200 px-1 py-4 md:h-[10px] lg:h-[350px]"> */}
