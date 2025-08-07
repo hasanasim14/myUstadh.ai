@@ -74,583 +74,311 @@ const CardOne = ({ selectedDocs, setSelectedDocs, onCollapseChange }) => {
   };
 
   // this is the data structure that contains the card data, basically the modules and documents
-  const criminalLawModules = {
-    title: "Criminal Law",
+  const cardData = {
+    title: "Course Content",
     modules: [
       {
-        name: "Topic 1: Module Introduction",
+        name: "Module 1: Foundations of Assessment and Test Development",
         documents: [
           {
             id: 1,
-            name: "Lecture Notes",
-            mapping: "Lecture Notes Module Introduction",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 1\\1.md",
-            source: "Topic 1 – Module introduction",
-            chapter: null,
-            viewpath: "/docs/topic-1-module-introduction.md",
-          },
-          {
-            id: 2,
-            name: " Induction Slides",
-            mapping: "Induction Slides Module Introduction",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 1\\1.0-criminalinduction-slides.md",
-            source: "Criminal law Induction (Oct 2024)",
-            chapter: null,
-            viewpath: "/docs/criminal-law-induction-oct-2024.md",
-          },
-          {
-            id: 3,
-            name: " Introduction Video",
-            mapping: "Introduction Video ",
-            path: "",
+            name: "Clarifying the Purposes of Educational Assessment",
+            mapping: "Clarifying the Purposes of Educational Assessment",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ResearchArticles\\research_mds\\larifying the purposes of educational assessment.md",
             source: "Clarifying the purposes of educational assessment",
             chapter: null,
-            viewpath: `${endpoint}/video/criminal.mp4`,
+            viewpath:
+              "/docs/clarifying-the-purposes-of-educational-assessment.md",
           },
-        ],
-      },
-      {
-        name: "Topic 2: Understanding the building blocks of Criminal Liability",
-        documents: [
           {
-            id: 1,
-            name: "Lecture Notes",
-            mapping:
-              "Lecture Notes Understanding the building blocks of Criminal Liability",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 2\\2.md",
-            source:
-              "Topic 2 - Understanding the building blocks of criminal liability",
+            id: 2,
+            name: "A Review of the Literature on Marking Reliability",
+            mapping: "A Review of the Literature on Marking Reliability",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ResearchArticles\\research_mds\\A review of the literature on marking reliability.md",
+            source: "**A REVIEW OF THE LITERATURE ON MARKING RELIABILITY**",
             chapter: null,
             viewpath:
-              "/docs/topic-2-understanding-the-building-blocks-of-criminal-liability.md",
-          },
-        ],
-      },
-      {
-        name: "Topic 3: Actus reus: conduct and circumstances",
-        documents: [
-          {
-            id: 1,
-            name: "Lecture Notes",
-            mapping: "Lecture Notes Actus reus conduct and circumstances",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 3\\3.md",
-            source: "Topic 3 - Actus reus: conduct and circumstances",
-            chapter: null,
-            viewpath: "/docs/topic-3-actus-reus-conduct-and-circumstances.md",
-          },
-          {
-            id: 2,
-            name: "Lecture Plus 1 Slides",
-            mapping:
-              "Lecture Plus 1 Slides Actus reus conduct and circumstances",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 3\\3_lecture_slides.md",
-            source: "Actus Reus",
-            chapter: null,
-            viewpath: "/docs/actus-reus.md",
-          },
-        ],
-      },
-      {
-        name: "Topic 4: Actus reus: consequences and their causes",
-        documents: [
-          {
-            id: 1,
-            name: "Lecture Notes",
-            mapping: "Lecture Notes Actus reus consequences and their causes",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 4\\4.md",
-            source: "Topic 4 - Actus reus: consequences and their causes",
-            chapter: null,
-            viewpath:
-              "/docs/topic-4-actus-reus-consequences-and-their-causes.md",
-          },
-          {
-            id: 2,
-            name: "Mini Lecture 1 Slides",
-            mapping: "Mini Lecture 1 Slides Mens Rea criminal fault",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 4\\4_minilecture1_slides.md",
-            source: "The Chain of Causation",
-            chapter: null,
-            viewpath: "/docs/the-chain-of-causation.md",
+              "/docs/a-review-of-the-literature-on-marking-reliability.md",
           },
           {
             id: 3,
-            name: "Mini Lecture 2 Slides",
-            mapping: "Mini Lecture 2 Slides Mens Rea criminal fault",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 4\\4_minilecture2_slides.md",
-            source: "How can the chain of causation be broken?",
+            name: "A Teacher's Guide to Alternative Assessment",
+            mapping: "A Teachers Guide to Alternative Assessment",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ResearchArticles\\research_mds\\A Teacher s Guide to Alternative Assessment  Taking the First Steps.md",
+            source: "A Teacher's Guide to Alternative Assessment:",
             chapter: null,
-            viewpath: "/docs/how-can-the-chain-of-causation-be-broken.md",
-          },
-        ],
-      },
-      {
-        name: "Topic 5: Mens Rea: criminal fault",
-        documents: [
-          {
-            id: 1,
-            name: "Lecture Notes",
-            mapping: "Lecture Notes Mens Rea criminal fault",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 5\\5.md",
-            source: "Topic 5 - Mens rea: criminal fault",
-            chapter: null,
-            viewpath: "/docs/topic-5-mens-rea-criminal-fault.md",
-          },
-          {
-            id: 2,
-            name: "Mini Lecture 1 Slides",
-            mapping: "Mini Lecture 1 Slides Mens Rea criminal fault",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 5\\5_minilecture1_slides.md",
-            source: "Mens Rea – Proving Fault",
-            chapter: null,
-            viewpath: "/docs/mens-rea-proving-fault.md",
-          },
-          {
-            id: 3,
-            name: "Mini Lecture 2 Slides",
-            mapping: "Mini Lecture 2 Slides Mens Rea criminal fault",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 5\\5_minilecture2_slides.md",
-            source: "Intention in the Criminal Law",
-            chapter: null,
-            viewpath: "/docs/intention-in-the-criminal-law.md",
-          },
-        ],
-      },
-      {
-        name: "Topic 6: Coincidence of Actus Reus and Mens Rea",
-        documents: [
-          {
-            id: 1,
-            name: "Lecture Notes",
-            mapping: "Lecture Notes Coincidence of Actus Reus and Mens Rea",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 6\\6.md",
-            source: "Topic 6 – Coincidence of actus reus and mens rea",
-            chapter: null,
-            viewpath: "/docs/topic-6-coincidence-of-actus-reus-and-mens-rea.md",
-          },
-          {
-            id: 2,
-            name: "Mini Lecture 1 Slides",
-            mapping:
-              "Mini Lecture 1 Slides Coincidence of Actus Reus and Mens Rea",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 6\\6_minilecture1_slides.md",
-            source: "Miller – How case law develops",
-            chapter: null,
-            viewpath: "/docs/miller-how-case-law-develops.md",
-          },
-          {
-            id: 3,
-            name: "Mini Lecture 2 Slides",
-            mapping:
-              "Mini Lecture 2 Slides Coincidence of Actus Reus and Mens Rea ",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 6\\6_minilecture2_slides.md",
-            source: "Coincidence of actus reus and mens rea",
-            chapter: null,
-            viewpath: "/docs/coincidence-of-actus-reus-and-mens-rea.md",
-          },
-        ],
-      },
-      {
-        name: "Topic 7: Criminal Homicide",
-        documents: [
-          {
-            id: 1,
-            name: "Lecture Notes",
-            mapping: "Lecture Notes Criminal Homicide",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 7\\7.md",
-            source: "Topic 7 - Criminal homicide",
-            chapter: null,
-            viewpath: "/docs/topic-7-criminal-homicide.md",
-          },
-          {
-            id: 2,
-            name: "Lecture Plus 1 Slides",
-            mapping: "Lecture Plus 1 Slides Criminal Homicide",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 7\\7_lectureplus1_slides.md",
-            source: "Murder and partial defences",
-            chapter: null,
-            viewpath: "/docs/murder-and-partial-defences.md",
-          },
-          {
-            id: 3,
-            name: "Lecture Plus 2 Slides",
-            mapping: "Lecture Plus 2 Slides Criminal Homicide",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 7\\7_lectureplus2_slides.md",
-            source: "Criminal Law: Involuntary Manslaughter",
-            chapter: null,
-            viewpath: "/docs/criminal-law-involuntary-manslaughter.md",
+            viewpath: "/docs/a-teacher-s-guide-to-alternative-assessment.md",
           },
           {
             id: 4,
-            name: "Mini Lecture 1 Slides",
-            mapping: "Mini Lecture 1 Criminal Homicide",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 7\\7_minilecture1_slides.md",
-            source: "What's Wrong with Murder",
-            chapter: null,
-            viewpath: "/docs/whats-wrong-with-murder.md",
+            name: "Chapter 1: Classroom Assessment – Every Student a Learner",
+            mapping: "Chapter 1 Classroom Assessment Every Student a Learner",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ReferenceBooks\\classroom_assessment\\chapter_mds\\chapter1_classroom_assessment_every_student_a_learner.md",
+            source:
+              "Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
+            chapter: "Chapter 1: Classroom Assessment: Every Student a Learner",
+            viewpath:
+              "/docs/chapter1_classroom_assessment_every_student_a_learner.md",
           },
           {
             id: 5,
-            name: "Mini Lecture 2 Slides",
-            mapping: "Mini Lecture 2 Slides Criminal Homicide",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 7\\7_minilecture2_slides.md",
-            source: "What's Wrong with Murder",
-            chapter: null,
-            viewpath: "/docs/whats-wrong-with-murder-2.md",
-          },
-        ],
-      },
-      {
-        name: "Topic 8: Rape",
-        documents: [
-          {
-            id: 1,
-            name: "Lecture Notes",
-            mapping: "Lecture Notes Non-fatal Offences Against the Person",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 8\\8.md",
-            source: "Topic 8 - Rape",
-            chapter: null,
-            viewpath: "/docs/topic-8-rape.md",
-          },
-          {
-            id: 2,
-            name: "Mini Lecture 1 Slides",
-            mapping: "Mini Lecture 1 Rape",
-            path: ":\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 8\\8_minilecture1_slides.md",
-            source: "Rape: The Basic Elements",
-            chapter: null,
-            viewpath: "/docs/rape-the-basic-elements.md",
-          },
-          {
-            id: 3,
-            name: "Mini Lecture 2 Slides",
-            mapping: "Mini Lecture 2 Slides Rape",
-            path: ":\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 8\\8_minilecture2_slides.md",
-            source: "Consent and sexual offences",
-            chapter: null,
-            viewpath: "/docs/consent-and-sexual-offences.md",
-          },
-        ],
-      },
-      {
-        name: "Topic 9: Non-fatal Offences Against the Person",
-        documents: [
-          {
-            id: 1,
-            name: "Lecture Notes",
-            mapping: "Lecture Notes Non-fatal Offences Against the Person",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 9\\9.md",
-            source: "Topic 9 - Non-fatal offences against the person",
-            chapter: null,
-            viewpath: "/docs/topic-9-non-fatal-offences-against-the-person.md",
-          },
-          {
-            id: 2,
-            name: "Mini Lecture 1 Slides",
-            mapping: "Mini Lecture 1 Non-fatal Offences Against the Person",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 9\\9_minilecture1_slides.md",
-            source: "The Forms of Non Fatal Offences: Common Assault",
-            chapter: null,
-            viewpath: "/docs/the-forms-of-non-fatal-offences-common-assault.md",
-          },
-          {
-            id: 3,
-            name: "Mini Lecture 2 Slides",
+            name: "Language Effects in International Testing: The Case of PISA 2006 Science Items",
             mapping:
-              "Mini Lecture 2 Slides Non-fatal Offences Against the Person",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 9\\9_minilecture2_slides.md",
-            source: "Non fatal offences",
-            chapter: null,
-            viewpath: "/docs/non-fatal-offences.md",
-          },
-          {
-            id: 4,
-            name: "Mini Lecture 3 Slides",
-            mapping:
-              "Mini Lecture 3 Slides Non-fatal Offences Against the Person",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 9\\9_minilecture3_slides.md",
-            source: "Tackling multi-part problem questions",
-            chapter: null,
-            viewpath: "/docs/tackling-multi-part-problem-questions.md",
-          },
-        ],
-      },
-      {
-        name: "Topic 10: Defences 1: Failure of Proof",
-        documents: [
-          {
-            id: 1,
-            name: "Lecture Notes",
-            mapping: "Lecture Notes Defences 1 Failure of Proof",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 10\\10.md",
-            source: "Topic 10 - Defences 1: failure of proof",
-            chapter: null,
-            viewpath: "/docs/topic-10-defences-1-failure-of-proof.md",
-          },
-          {
-            id: 2,
-            name: "Mini Lecture 1 Slides",
-            mapping: "Mini Lecture 1 Slides Defences 1 Failure of Proof",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 10\\10_minilecture1_slides.md",
+              "Language Effects in International Testing The Case of PISA 2006 Science Items",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ResearchArticles\\research_mds\\Language effects in international testing  the case of PISA 2006 science items.md",
             source:
-              "General defences 1 Introduction and Failure of Proof Defences Professor William Wilson",
+              "Language effects in international testing: the case of PISA 2006 science items",
             chapter: null,
             viewpath:
-              "/docs/general-defences-1-introduction-and-failure-of-proof-defences-professor-william-wilson.md",
-          },
-          {
-            id: 3,
-            name: "Mini Lecture 2 Slides",
-            mapping: "Mini Lecture 2 Slides Defences 1 Failure of Proof",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 10\\10_minilecture2_slides.md",
-            source: "Failure of proof defences",
-            chapter: null,
-            viewpath: "/docs/failure-of-proof-defences.md",
-          },
-          {
-            id: 4,
-            name: "Mini Lecture 3 Slides",
-            mapping: "Mini Lecture 3 Slides Defences 1 Failure of Proof",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 10\\0_minilecture3_slides.md",
-            source: "Intoxication",
-            chapter: null,
-            viewpath: "/docs/intoxication.md",
+              "/docs/language-effects-in-international-testing-the-case-of-pisa-2006-science-items.md",
           },
         ],
       },
       {
-        name: "Topic 11: Defences 2: Justification and Excuse",
+        name: "Module 2: Designing Assessments — Tools, Types, and Techniques",
         documents: [
           {
             id: 1,
-            name: "Lecture Notes",
-            mapping: "Lecture Notes Defences 2 Justification and Excuse",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 11\\11.md",
-            source: "Topic 11 – Defences 2: affirmative defences",
-            chapter: null,
-            viewpath: "/docs/topic-11-defences-2-affirmative-defences.md",
-          },
-          {
-            id: 2,
-            name: "Mini Lecture 1 Slides",
-            mapping:
-              "Mini Lecture 1 Slides Defences 2 Justification and Excuse",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 11\\11_minilecture1_slides.md",
-            source: "Affirmative Defences",
-            chapter: null,
-            viewpath: "/docs/affirmative-defences.md",
-          },
-          {
-            id: 3,
-            name: "Mini Lecture 2 Slides",
-            mapping:
-              "Mini Lecture 2 Slides Defences 2 Justification and Excuse",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 11\\ll_minilecture2_slides.md",
-            source: "Duress",
-            chapter: null,
-            viewpath: "/docs/duress.md",
-          },
-        ],
-      },
-      {
-        name: "Topic 12: Property Offences 1: theft and burglary",
-        documents: [
-          {
-            id: 1,
-            name: "Lecture Notes",
-            mapping: "Lecture Notes Property Offences 1 theft and burglary",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 12\\12.md",
-            source: "Topic 12 - Property offences 1: theft and burglary",
-            chapter: null,
-            viewpath:
-              "/docs/topic-12-property-offences-1-theft-and-burglary2.md",
-          },
-          {
-            id: 2,
-            name: "Mini Lecture 1 Slides",
-            mapping:
-              "Mini Lecture 1 Slides Property Offences 1 theft and burglary",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 12\\12_minilecture1_slides.md",
-            source: "Property Offences 1: Theft",
-            chapter: null,
-            viewpath: "/docs/property-offences-1-theft.md",
-          },
-          {
-            id: 3,
-            name: "Mini Lecture 2 Slides",
-            mapping:
-              "Mini Lecture 2 Slides Property Offences 1 theft and burglary",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 12\\12_minilecture2_slides.md",
-            source: "Theft: Appropriating Property",
-            chapter: null,
-            viewpath: "/docs/theft-appropriating-property.md",
-          },
-        ],
-      },
-      {
-        name: "Topic 13: Property Offences 2: Fraud and Making off without Payment",
-        documents: [
-          {
-            id: 1,
-            name: "Lecture Notes",
-            mapping:
-              "Lecture Notes Property Offences 2 Fraud and Making off without Payment",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 13\\13.md",
+            name: "Chapter 2: Clear Purpose in Assessment for Learning",
+            mapping: "chapter 2 clear purpose assessment for and of learning",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ReferenceBooks\\classroom_assessment\\chapter_mds\\chapter2_clear_purpose_assessment_for_and_of_learning.md",
             source:
-              "Topic 13 - Property offences 2: fraud and making off without payment",
-            chapter: null,
+              "Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
+            chapter:
+              "Chapter 2: Clear Purpose: Assessment *for* and *of* Learning",
             viewpath:
-              "/docs/topic-13-property-offences-2-fraud-and-making-off-without-payment.md",
+              "/docs/chapter2_clear_purpose_assessment_for_and_of_learning.md",
           },
           {
             id: 2,
-            name: "Mini Lecture 1 Slides",
-            mapping:
-              "Mini Lecture 1 Slides Property Offences 2 Fraud and Making off without Payment",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 13\\13_minilecture1_slides.md",
-            source: "Fraud",
-            chapter: null,
-            viewpath: "/docs/fraud.md",
-          },
-        ],
-      },
-      {
-        name: "Topic 14: Property Offences 3: Criminal Damage",
-        documents: [
-          {
-            id: 1,
-            name: "LectureNotes",
-            mapping: "Lecture Notes Property Offences 3 Criminal Damage",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 14\\14.md",
-            source: "Topic 14 - Property offences 3: criminal damage",
-            chapter: null,
-            viewpath: "/docs/topic-14-property-offences-3-criminal-damage.md",
-          },
-          {
-            id: 2,
-            name: "Mini Lecture 1 Slides ",
-            mapping:
-              "Mini Lecture 1 Slides  Property Offences 3 Criminal Damage",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 14\\14_minilecture1_slides.md",
-            source: "Criminal Damage: The Conduct Element",
-            chapter: null,
-            viewpath: "/docs/criminal-damage-the-conduct-element.md",
+            name: "Chapter 3: Clear Targets",
+            mapping: "Chapter 3 Clear Targets",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ReferenceBooks\\classroom_assessment\\chapter_mds\\chapter3_clear_targets.md",
+            source:
+              "Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
+            chapter: "**Chapter 3 Learning Targets**",
+            viewpath: "/docs/chapter3_clear_targets.md",
           },
           {
             id: 3,
-            name: "Mini Lecture 2 Slides ",
-            mapping:
-              "Mini Lecture 2 Slides Property Offences 3 Criminal Damage",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\Topic 14\\14_minilecture2_slides.md",
-            source: "The Fault Element in Criminal Damage",
-            chapter: null,
-            viewpath: "/docs/the-fault-element-in-criminal-damage.md",
-          },
-        ],
-      },
-      {
-        name: "Book",
-        documents: [
-          {
-            id: 1,
-            name: "Chapter 1",
-            mapping: "Chapter 1",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\criminal_law\\chapter1.md",
-            chapter: "1: Introduction**",
-            viewpath: "/docs/chapter1.md",
-          },
-          {
-            id: 2,
-            name: "Chapter 2",
-            mapping: "Chapter 2",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\criminal_law\\chapter2.md",
-            source: "**Criminal law**",
-            chapter: "2: The building blocks of criminal liability",
-            viewpath: "/docs/chapter2.md",
-          },
-          {
-            id: 3,
-            name: "Chapter 3",
-            mapping: "Chapter 3",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\criminal_law\\chapter3.md",
-            source: "**Criminal law**",
-            chapter: "3: *Actus reus*: conduct and circumstances",
-            viewpath: "/docs/chapter3.md",
+            name: "Chapter 4: Sound Design",
+            mapping: "Chapter 4 Sound Design",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ReferenceBooks\\classroom_assessment\\chapter_mds\\chapter4_sound_design.md",
+            source:
+              "Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
+            chapter: "Chapter 4: Sound Design",
+            viewpath: "/docs/chapter4_sound_design.md",
           },
           {
             id: 4,
-            name: "Chapter 4",
-            mapping: "Chapter 4",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\criminal_law\\chapter4.md",
-            source: "**Criminal law**",
-            chapter: "4: *Actus reus***: consequences and their causes",
-            viewpath: "/docs/chapter4.md",
+            name: "Chapter 5: Selected Response Assessment",
+            mapping: "Chapter 5 Selected Response Assessment",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ReferenceBooks\\classroom_assessment\\chapter_mds\\chapter5_selected_response_assessment.md",
+            source:
+              "Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
+            chapter: "Chapter 5:  Selected Response Assessment",
+            viewpath: "/docs/chapter5_selected_response_assessment.md",
           },
           {
             id: 5,
-            name: "Chapter 5",
-            mapping: "Chapter 5",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\criminal_law\\chapter5.md",
-            source: "**Criminal law**",
-            chapter: "5: *Mens rea***: criminal fault",
-            viewpath: "/docs/chapter5.md",
+            name: "Chapter 6: Written Response Assessment",
+            mapping: "Chapter 6 Written Response Assessment",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ReferenceBooks\\classroom_assessment\\chapter_mds\\chapter6_written_response_assessment.md",
+            source:
+              "Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
+            chapter: "Chapter 6:  Written Response Assessment",
+            viewpath: "/docs/chapter6_written_response_assessment.md",
           },
           {
             id: 6,
-            name: "Chapter 6",
-            mapping: "Chapter 6",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\criminal_law\\chapter6.md",
-            source: "**Criminal law**",
-            chapter: "6: Coincidence of** *actus reus* **and** *mens rea*",
-            viewpath: "/docs/chapter6.md",
+            name: "Chapter 7: Performance Assessment",
+            mapping: "Chapter 7 Performance Assessment",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ReferenceBooks\\classroom_assessment\\chapter_mds\\chapter7_performance_assessment.md",
+            source:
+              "Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
+            chapter: "Chapter 7: Performance Assessment",
+            viewpath: "/docs/chapter7_performance_assessment.md",
           },
           {
             id: 7,
-            name: "Chapter 7",
-            mapping: "Chapter 7",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\criminal_law\\chapter7.md",
-            source: "**Criminal law**",
-            chapter: "7: Criminal homicide",
-            viewpath: "/docs/chapter7.md",
+            name: "Chapter 8: Personal Communication as Classroom Assessment",
+            mapping: "Chapter 8 Personal Communication as Classroom Assessment",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ReferenceBooks\\classroom_assessment\\chapter_mds\\chapter8_personal_communication_as_classroom_assessment.md",
+            source:
+              "Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
+            chapter:
+              "Chapter 8: Personal Communication as Classroom Assessment",
+            viewpath:
+              "/docs/chapter8_personal_communication_as_classroom_assessment.md",
+          },
+        ],
+      },
+      {
+        name: "Module 3: Interpreting, Recording, and Using Assessment Data",
+        documents: [
+          {
+            id: 1,
+            name: "Chapter 9: Record Keeping & Tracking Student Learning",
+            mapping: "Chapter 9 Record Keeping & Tracking Student Learning",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ReferenceBooks\\classroom_assessment\\chapter_mdschapter9_record_keeping_tracking_student_learning.md",
+            source:
+              "Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
+            chapter: "Chapter 9: Record Keeping: Tracking Student Learning",
+            viewpath:
+              "/docs/chapter9_record_keeping_tracking_student_learning.md",
+          },
+          {
+            id: 2,
+            name: "Chapter 10: Converting Summative Assessment Information into Grades",
+            mapping:
+              "Chapter 10 Converting Summative Assessment Information into Grades",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ReferenceBooks\\classroom_assessment\\chapter_mds\\chapter10_coverting_summativr_assessment_information_into_grades.md",
+            source:
+              "Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
+            chapter:
+              "Chapter 10: Converting Summative Assessment Information into Grades",
+            viewpath:
+              "/docs/chapter10_coverting_summativr_assessment_information_into_grades.md",
+          },
+          {
+            id: 3,
+            name: "Chapter 11: Learning Targets",
+            mapping: "Chapter 11 Learning Targets",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ReferenceBooks\\classroom_assessment\\chapter_mdschapter11_learning_targets.md",
+            source:
+              "Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
+            chapter: "Chapter 11: Portfolios",
+            viewpath: "/docs/chapter11_learning_targets.md",
+          },
+          {
+            id: 4,
+            name: "Chapter 12: Conferences about and with Students",
+            mapping: "Chapter 12 Conferences about and with Students",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ReferenceBooks\\classroom_assessment\\chapter_mds\\chapter12_conferences_about_and_with_students.md",
+            source:
+              "Classroom Assessment for Student Learning Jan Chappuis et al. Second Edition",
+            chapter: "Chapter 12:  Conferences About and with Students",
+            viewpath: "/docs/chapter12_conferences_about_and_with_students.md",
+          },
+          {
+            id: 5,
+            name: "Criteria, Comparison and Past Experiences: How Do Teachers Make Judgements when Marking Coursework?",
+            mapping:
+              "Criteria, Comparison and Past Experiences How Do Teachers Make Judgements when Marking Coursework",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ResearchArticles\\research_mds\\Criteria, comparison and past experiences  how do teachers make judgements when marking coursework.md",
+            source:
+              "Criteria, comparison and past experiences: how do teachers make judgements when marking coursework?",
+            chapter: null,
+            viewpath:
+              "/docs/criteria-comparison-and-past-experiences-how-do-teachers-make-judgements-when-marking-coursework.md",
+          },
+          {
+            id: 6,
+            name: "Portfolio Purposes: Teachers Exploring the Relationship between Evaluation and Learning",
+            mapping:
+              "Portfolio Purposes Teachers Exploring the Relationship between Evaluation and Learning",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ResearchArticles\\research_mds\\Portfolio Purposes.md",
+            source:
+              "Portfolio Purposes: Teachers Exploring the Relationshi Between Evaluation an Learning",
+            chapter: null,
+            viewpath:
+              "/docs/portfolio-purposes-teachers-exploring-the-relationshi-between-evaluation-an-learning.md",
+          },
+          {
+            id: 7,
+            name: "Southeast Missouri State University Rubric Examples",
+            mapping: "Southeast Missouri State University Rubric Examples",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ReferenceBooks\\southeast_missouri\\Southeast Missouri State University (2005) Rubric examples.md",
+            source: "Southeast Massouri State University Rubric Examples",
+            chapter: null,
+            viewpath:
+              "/docs/southeast-missouri-state-university-rubric-examples.md",
           },
           {
             id: 8,
-            name: "Chapter 8",
-            mapping: "Chapter 8",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\criminal_law\\chapter8.md",
-            source: "**Criminal law**",
-            chapter: "**8: Rape**",
-            viewpath: "/docs/chapter8.md",
+            name: "Ongoing Issues in Test Fairness",
+            mapping: "Ongoing Issues in Test Fairness",
+            path: "C:\\Users\\user\\Desktop\\TasksDurbeen\\ResearchArticles\\research_mds\\Ongoing issues in test fairness.md",
+            source: "Ongoing issues in test fairness",
+            chapter: null,
+            viewpath: "/docs/ongoing-issues-in-test-fairness.md",
+          },
+        ],
+      },
+      {
+        name: "Module 4: Critical Perspectives and Challenges in Assessment",
+        documents: [
+          {
+            id: 1,
+            name: "A Review of Multiple-Choice Item Writing Guidelines for Classroom Assessment",
+            mapping:
+              "A Review of Multiple Choice Item Writing Guidelines for Classroom Assessment",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ResearchArticles\\research_mds\\A Review of Multiple-Choice Item-Writing Guidelines for Classroom Assessment.md",
+            source:
+              "A Review of Multiple-Choice Item-Writing Guidelines for Classroom Assessment",
+            chapter: null,
+            viewpath:
+              "/docs/a-review-of-multiple-choice-item-writing-guidelines-for-classroom-assessment.md",
           },
           {
-            id: 9,
-            name: "Chapter 9",
-            mapping: "Chapter 9",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\criminal_law\\chapter9.md",
-            source: "**Criminal law**",
-            chapter: "9: Non-fatal offences against the person**",
-            viewpath: "/docs/chapter9.md",
+            id: 2,
+            name: "Does Washback Exist?",
+            mapping: "Does Washback Exist",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ResearchArticles\\research_mds\\Does Washback Exists.md",
+            source: "Does Washback Exist?",
+            chapter: null,
+            viewpath: "/docs/does-washback-exist.md",
           },
           {
-            id: 10,
-            name: "Chapter 10",
-            mapping: "Chapter 10",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\criminal_law\\chapter10.md",
-            source: "**Criminal law**",
-            chapter: "10 Defences 1: failure of proof**",
-            viewpath: "/docs/chapter10.md",
+            id: 3,
+            name: "Can a Picture Ruin a Thousand Words: The Effects of Visual Resources in Exam Questions",
+            mapping:
+              "Can a Picture Ruin a Thousand Words The Effects of Visual Resources in Exam Questions",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ResearchArticles\\research_mds\\Can a picture ruin a thousand words  The effects of visual resources in exam questions.md",
+            source:
+              "Can a picture ruin a thousand words?The effects of visual resources in exam questions",
+            chapter: null,
+            viewpath:
+              "/docs/can-a-picture-ruin-a-thousand-words-the-effects-of-visual-resources-in-exam-questions.md",
           },
           {
-            id: 11,
-            name: "Chapter 11",
-            mapping: "Chapter 11",
-            path: "C:\\Users\\Maham Jafri\\Documents\\Office Tasks\\SZABIST-Ustadh\\criminal\\mds\\criminal_law\\chapter11.md",
-            source: "**Criminal law**",
-            chapter: "11 Defences 2: affirmative defences**",
-            viewpath: "/docs/chapter11.md",
+            id: 4,
+            name: "Deficiency, Contamination, and the Signal Processing Metaphor",
+            mapping:
+              "Deficiency Contamination and the Signal Processing Metaphor",
+            path: "C:\\Users\\userDesktop\\Tasks\\Durbeen\\ResearchArticles\\research_mds\\Deficiency, Contamination, and the Signal Processing Metaphor.md",
+            source:
+              "Deficiency, Contamination, and the Signal Processing Metaphor",
+            chapter: null,
+            viewpath:
+              "/docs/deficiency-contamination-and-the-signal-processing-metaphor.md",
+          },
+          {
+            id: 5,
+            name: "Macro and Micro Validation: Beyond the Five Sources Framework for Classifying Validation Evidence and Analysis",
+            mapping:
+              "Macro and Micro Validation Beyond the Five Sources Framework for Classifying Validation Evidence and Analysis",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ResearchArticles\\research_mds\\Macro- and Micro-Validation- Beyond the ΓÇÿFive SourcesΓÇÖ Framework for Classifying Validation Evidence and Analysis.md",
+            source:
+              "Macro- and Micro-Validation: Beyond the ‘Five Sources’ Framework for Classifying Validation Evidence and Analysis",
+            chapter: null,
+            viewpath:
+              "/docs/macro-and-micro-validation-beyond-the-five-sources-framework-for-classifying-validation-evidence-and-analysis.md",
+          },
+          {
+            id: 6,
+            name: "Threats to the Valid Use of Assessments",
+            mapping: "Threats to the Valid Use of Assessments",
+            path: "C:\\Users\\user\\Desktop\\Tasks\\Durbeen\\ResearchArticles\\research_mds\\Threats to the Valid Use of Assessments.md",
+            source: "Threats to the Valid Use of Assessments",
+            chapter: null,
+            viewpath: "/docs/threats-to-the-valid-use-of-assessments.md",
           },
         ],
       },
     ],
+    audioOverview: true,
+    notesAndHighlights: true,
   };
 
   const toggleCollapse = () => {
@@ -729,10 +457,10 @@ const CardOne = ({ selectedDocs, setSelectedDocs, onCollapseChange }) => {
               ) : (
                 <>
                   <h3 className="px-4 font-medium text-gray-700">
-                    {criminalLawModules.title}
+                    {cardData.title}
                   </h3>
 
-                  {criminalLawModules?.modules?.map((module, idx) => {
+                  {cardData?.modules?.map((module, idx) => {
                     const isOpen = openModules[module.name];
                     return (
                       <div key={idx} className="module px-4 py-2">
@@ -841,7 +569,7 @@ export default CardOne;
     <>
       <h3>Test Development and Evaluation</h3>
 
-      {criminalLawModules.modules.map((module, idx) => {
+      {cardData.modules.map((module, idx) => {
         const isOpen = openModules[module.name];
         return (
           <div key={idx} className="module">
@@ -875,8 +603,8 @@ export default CardOne;
         );
       })}
 
-      {criminalLawModules.audioOverview && <div className="extra-link">▶ Audio Overview</div>}
-      {criminalLawModules.notesAndHighlights && <div className="extra-link">🗒️ Notes and Highlights</div>}
+      {cardData.audioOverview && <div className="extra-link">▶ Audio Overview</div>}
+      {cardData.notesAndHighlights && <div className="extra-link">🗒️ Notes and Highlights</div>}
     </>
   )}
 </div> */
