@@ -16,7 +16,6 @@ import {
 import remarkGfm from "remark-gfm";
 
 const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
-  // const [notes, setNotes] = useState([]);
   const [menuOpenIndex, setMenuOpenIndex] = useState(null);
   const menuRef = useRef(null);
   const modalRef = useRef(null);
@@ -34,9 +33,8 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   const [mindmapOpen, setMindmapOpen] = useState(false);
   const [mindmapMarkdown, setMindmapMarkdown] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const abortControllers = useRef({});
   const endpoint = import.meta.env.VITE_API_URL;
-
-  console.log("the notes", notes);
 
   // better formatting for markdown
   const renderers = {
@@ -120,7 +118,16 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
 
   // function added to play the audio of the note content when the user clicks on the headphone icon
   const playNoteAudioFromAPI = async (text, index) => {
-    setClickedIndex(index);
+    if (clickedIndex === index && !playingIndex) {
+      const controller = abortControllers.current[index];
+      if (controller) {
+        controller.abort();
+        delete abortControllers.current[index];
+      }
+      setClickedIndex(null);
+      return;
+    }
+
     if (playingIndex === index) {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -131,28 +138,35 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
       return;
     }
 
+    const controller = new AbortController();
+    abortControllers.current[index] = controller;
+    setClickedIndex(index);
+
     try {
       const response = await fetch(`${endpoint}/generate-audio/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({ text }),
+        signal: controller.signal,
       });
+
+      if (!response.ok) {
+        throw new Error(`API call failed with status ${response.status}`);
+      }
 
       const audioBlob = await response.blob();
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
       audioRef.current = audio;
 
-      // Once audio starts, show green
       audio.onplay = () => {
         setPlayingIndex(index);
         setClickedIndex(null);
       };
 
-      // On end, revert to black
       audio.onended = () => {
         setPlayingIndex(null);
         setClickedIndex(null);
@@ -160,9 +174,15 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
 
       await audio.play();
     } catch (error) {
-      console.error("Audio playback failed:", error);
+      if (error.name === "AbortError") {
+        console.log("Fetch aborted");
+      } else {
+        console.error("Audio playback failed:", error);
+      }
       setPlayingIndex(null);
       setClickedIndex(null);
+    } finally {
+      delete abortControllers.current[index];
     }
   };
 
