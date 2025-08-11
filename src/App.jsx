@@ -8,7 +8,7 @@ import Navbar from "./components/Header";
 import MarkdownViewer from "./components/MarkdownViewer";
 import { Routes, Route, Navigate } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
-import CourseCatalog from "./components/CourseraTiles";
+import CourseCatalog from "./components/CourseCatalog";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -20,7 +20,7 @@ export default function App() {
   const isMainApp =
     location.pathname === "/" ||
     location.pathname === "/login" ||
-    location.pathname === "/coursera";
+    location.pathname === "/courses";
 
   const [tab, setTab] = useState("content");
   const [selectedDocs, setSelectedDocs] = useState([]);
@@ -38,7 +38,6 @@ export default function App() {
 
   const handleAddPinnedNote = async (question, answer) => {
     const endpoint = import.meta.env.VITE_API_URL;
-    console.log("inside the handleAddPinnedNote");
     const newNote = {
       Title: `Pinned: ${question.slice(0, 30)}...`,
       Response: answer,
@@ -179,7 +178,7 @@ export default function App() {
         element={<ProtectedRoute>{renderMainApp()}</ProtectedRoute>}
       />
       <Route
-        path="/coursera"
+        path="/courses"
         element={
           <ProtectedRoute>
             <CourseCatalog />

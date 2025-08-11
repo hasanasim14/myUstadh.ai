@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Star, Clock, Users, ChevronDown } from "lucide-react";
+import { Search, ChevronDown } from "lucide-react";
 import { Card, CardContent, CardFooter } from "./ui/card";
 import {
   DropdownMenu,
@@ -43,7 +43,6 @@ const categories = [
 export default function CourseCatalog() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
-  //   const router = useRouter();
   const navigate = useNavigate();
 
   const filteredCourses = courses.filter((course) => {
@@ -56,7 +55,6 @@ export default function CourseCatalog() {
   });
 
   const handleCourseClick = () => {
-    // router.push("/");
     navigate("/");
   };
 

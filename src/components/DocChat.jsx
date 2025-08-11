@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaUser, FaRobot } from "react-icons/fa";
-import { Pin, Headphones, Mic, SendHorizonal, Copy } from "lucide-react";
+import { Pin, Headphones, Mic, SendHorizonal, Copy, Check } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import "./DocChat.css";
 import remarkGfm from "remark-gfm";
+import RemoveMarkdown from "remove-markdown";
+import "./DocChat.css";
 
 const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
   const initialBotMessage = {
@@ -20,6 +21,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
   const [clickedIndex, setClickedIndex] = useState(null);
   const [playingIndex, setPlayingIndex] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState(null);
 
   const audioRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -405,7 +407,7 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
                   <>
                     <Pin
                       size={12}
-                      className="ml-4 cursor-pointer"
+                      className="ml-4 cursor-pointer text-black"
                       title="Pin this response"
                       onClick={() => {
                         const userQuestion =
@@ -431,7 +433,35 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
                             : "black",
                       }}
                     />
-                    <Copy size={12} className="ml-3 cursor-pointer" />
+                    {copiedIndex === index ? (
+                      <Check
+                        size={14}
+                        className="ml-3 text-green-500 transition-colors"
+                        title="Copied!"
+                      />
+                    ) : (
+                      <Copy
+                        size={12}
+                        className="ml-3 cursor-pointer text-black"
+                        title="Copy this response"
+                        onClick={() => {
+                          if (typeof msg.text === "string") {
+                            const plainText = RemoveMarkdown(msg.text, {
+                              stripListLeaders: false,
+                            });
+                            navigator.clipboard
+                              .writeText(plainText)
+                              .then(() => {
+                                setCopiedIndex(index);
+                                setTimeout(() => setCopiedIndex(null), 3000);
+                              })
+                              .catch((err) => {
+                                console.error("Failed to copy text: ", err);
+                              });
+                          }
+                        }}
+                      />
+                    )}
                   </>
                 )}
               </div>
@@ -455,12 +485,10 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
         />
         <div
           className="p-2 hover:bg-gray-100 rounded-full"
-          // className="mic-icon"
           onClick={toggleRecording}
           style={{ color: isRecording ? "green" : "black", cursor: "pointer" }}
           title={isRecording ? "Stop Recording" : "Start Recording"}
         >
-          {/* <FaMicrophone size={18} /> */}
           <Mic className="w-6 h-6" />
         </div>
         <button

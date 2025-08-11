@@ -398,9 +398,9 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
             <AudioOverview selectedDocs={selectedDocs} />
 
             <div className="notes-section">
-              <span className="section-title" style={{ fontSize: "13px" }}>
+              {/* <span className="section-title" style={{ fontSize: "13px" }}>
                 Notes
-              </span>
+              </span> */}
               <button
                 className="library-button w-full mb-2"
                 onClick={handleAddNote}
@@ -465,6 +465,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                   >
                     <div className="flex justify-between items-center pb-2 font-semibold">
                       <span
+                        className="text-sm"
                         style={{
                           whiteSpace: "nowrap",
                           overflow: "hidden",

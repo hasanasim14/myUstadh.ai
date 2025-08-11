@@ -21,7 +21,7 @@ export default function AuthForm() {
   useEffect(() => {
     const isToken = localStorage.getItem("token");
     if (isToken) {
-      navigate("/coursera");
+      navigate("/courses");
     }
   }, [navigate]);
 
@@ -79,7 +79,7 @@ export default function AuthForm() {
         if (isLoginMode) {
           localStorage.setItem("token", data?.access_token);
           toast.success("Login Successful");
-          setTimeout(() => navigate("/coursera"), 1000);
+          setTimeout(() => navigate("/courses"), 1000);
         } else {
           toast.success("Registration Successful. Please log in.");
           setIsLoginMode(true);

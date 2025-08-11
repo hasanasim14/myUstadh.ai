@@ -280,7 +280,6 @@ function MarkdownViewer() {
       }
 
       const markdownUrl = `/docs/${bookSlug}.md`;
-      console.log("fetching:", markdownUrl);
 
       try {
         setLoading(true); // start loading

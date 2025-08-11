@@ -1,7 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiInfo } from "react-icons/fi";
 import "./CardThree.css";
 import "./AudioOverview.css";
+import { Button } from "./ui/button";
+import { Info, Languages } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 const AudioOverview = ({ selectedDocs }) => {
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
@@ -109,7 +112,7 @@ const AudioOverview = ({ selectedDocs }) => {
       pollForPodcast(key);
     }
 
-    return () => clearPolling(); // clean up when component unmounts
+    return () => clearPolling();
   }, []);
 
   return (
@@ -118,58 +121,41 @@ const AudioOverview = ({ selectedDocs }) => {
         <span className="audio-title" style={{ fontSize: "13px" }}>
           Audio Overview
         </span>
-        <FiInfo
-          className="info-icon"
-          onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-          style={{ cursor: "pointer" }}
-        />
-        {showLanguageMenu && (
-          <div
-            style={{
-              position: "absolute",
-              top: "100%",
-              right: 0,
-              backgroundColor: "white",
-              border: "1px solid #ccc",
-              padding: "8px",
-              zIndex: 100,
-              borderRadius: "4px",
-              boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-            }}
-          >
-            <div
-              style={{
-                marginBottom: "4px",
-                fontWeight: "normal",
-                fontSize: "10px",
-              }}
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="hover:bg-gray-200 rounded-full"
             >
-              Select Language:
-            </div>
+              <Languages className="h-4 w-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            side="bottom"
+            className="p-2 w-32 bg-white border-gray-200"
+          >
+            <div className="mb-1 text-[10px] font-normal">Select Language:</div>
             {languages.map((lang) => (
               <div
                 key={lang}
                 onClick={() => handleLanguageSelect(lang)}
-                style={{
-                  cursor: "pointer",
-                  padding: "4px 0",
-                  fontSize: "9px",
-                  fontWeight: lang === selectedLanguage ? "bold" : "normal",
-                  color: lang === selectedLanguage ? "#007bff" : "inherit",
-                }}
+                className={`cursor-pointer text-[9px] py-[2px] ${
+                  lang === selectedLanguage
+                    ? "font-bold text-blue-500"
+                    : "font-normal text-gray-700"
+                }`}
               >
                 {lang}
               </div>
             ))}
-          </div>
-        )}
+          </PopoverContent>
+        </Popover>
       </div>
 
       <div className="load-box">
-        <span className="load-text" style={{ fontSize: "11px" }}>
-          Click to generate the podcast.
-        </span>
-        <button
+        <Button
           className="flex items-center justify-center bg-[#4259ff] text-white rounded-xl p-2 text-sm font-semibold cursor-pointer hover:bg-[#3a4bda] w-full"
           onClick={handleGenerateClick}
           disabled={loading || selectedDocs.length === 0}
@@ -187,7 +173,7 @@ const AudioOverview = ({ selectedDocs }) => {
           ) : (
             "Generate"
           )}
-        </button>
+        </Button>
       </div>
 
       {error && <div style={{ color: "red", marginTop: "8px" }}>{error}</div>}
