@@ -183,7 +183,6 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
             const response = await fetch(`${endpoint}/transcribe`, {
               method: "POST",
               headers: {
-                "Content-Type": "application/json",
                 Authorization: `bearer ${localStorage.getItem("token")}`,
               },
               body: formData,

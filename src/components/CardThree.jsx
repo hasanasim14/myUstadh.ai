@@ -14,6 +14,7 @@ import {
   Plus,
 } from "lucide-react";
 import remarkGfm from "remark-gfm";
+import { Button } from "./ui/button";
 
 const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   const [menuOpenIndex, setMenuOpenIndex] = useState(null);
@@ -424,7 +425,8 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
 
               <div className="flex flex-wrap gap-2 justify-center max-w-md mx-auto">
                 {noteTypes.map(({ label, icon: Icon }) => (
-                  <button
+                  <Button
+                    disabled={!selectedDocs.length}
                     key={label}
                     className="library-button w-[calc(50%-4px)]"
                     onClick={() => {
@@ -437,7 +439,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                   >
                     <Icon className="mr-2 h-4 w-4" />
                     {label}
-                  </button>
+                  </Button>
                 ))}
               </div>
 
