@@ -3,7 +3,6 @@ import "./CardThree.css";
 import { FiChevronRight, FiHeadphones, FiChevronLeft } from "react-icons/fi";
 import ReactMarkdown from "react-markdown";
 import AudioOverview from "./AudioOverview";
-import axios from "axios";
 import MindmapModal from "./MindmapModal";
 import {
   Edit,
@@ -70,7 +69,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
       });
 
       const data = await res.json();
-      console.log("the notes inside the get useEffect ", data?.data);
       setNotes(data?.data);
     } catch (error) {
       console.error("Error fetching notes:", error);
@@ -80,33 +78,30 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   // function added to fetch the mindmap from the backend when the user clicks on the Mind Map button
   const fetchMindmap = async () => {
     setLoading(true);
-    const authToken = localStorage.getItem("token");
-    console.log("the token", authToken);
+
     try {
-      const response = await axios.post(
-        `${endpoint}/generate-mindmap`,
-        {
-          selectedDocs: selectedDocs,
+      const response = await fetch(`${endpoint}/generate-mindmap`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `bearer ${localStorage.getItem("token")}`,
         },
-        {
-          headers: {
-            Authorization: `bearer ${authToken}`,
-          },
-        }
-      );
+        body: JSON.stringify({ selectedDocs }),
+      });
 
       const markdownContent = response.data.markdown || "No mindmap available.";
 
       const newMindmapNote = {
-        title: "Mind Map",
-        content: markdownContent,
+        Title: "Mind Map",
+        Response: markdownContent,
         editable: false,
         type: "mindmap",
       };
 
+      setNotes((prevNotes) => [newMindmapNote, ...prevNotes]);
       setMindmapMarkdown(markdownContent);
       setMindmapOpen(true);
-      await fetchNotes(); // Refresh notes from server
+      await fetchNotes();
     } catch (error) {
       console.error(
         "Error generating mindmap",
@@ -237,8 +232,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   // function added that handles the click on a note, if the note is a mindmap, it opens the mindmap modal, if the note is editable, it opens the edit modal, otherwise it opens the view-only modal
   const handleNoteClick = (index) => {
     const note = notes[index];
-
-    console.log("notes,", note);
 
     if (note.type === "mindmap") {
       setMindmapMarkdown(note.Response);
@@ -374,7 +367,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   };
 
   return (
-    // <div className="h-[85vh] md:border md:rounded-lg border-gray-200">
     <div
       className={`h-[85vh] md:border md:rounded-lg border-gray-200 transition-all duration-300 ease-in-out overflow-hidden ml-auto ${
         isCollapsed ? "w-15" : "w-full"
@@ -382,25 +374,19 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
     >
       {isCollapsed ? (
         <div className="flex justify-center p-3 border-b border-gray-200">
-          {/* // <div className="flex justify-end p-2"> */}
           <button
             className="cursor-pointer p-2 rounded-lg hover:bg-gray-200 text-[#64748b]"
             onClick={toggleCollapse}
           >
-            {/* <ChevronRight /> */}
             <FiChevronLeft />
-            {/* {isCollapsed ? <FiChevronRight /> : <FiChevronLeft />} */}
           </button>
         </div>
       ) : (
         <>
           <div className="card-header">
-            {/* <div className="flex justify-center pt-4"> */}
             <span className="title">Library</span>
-            {/* <span className="icon"> */}
             <button
               className="cursor-pointer p-2 m-2 rounded-lg hover:bg-gray-200 text-[#64748b]"
-              // onClick={() => setIsCollapsed((prev) => (prev === 1 ? 0 : 1))}
               onClick={toggleCollapse}
             >
               <FiChevronRight />
@@ -461,7 +447,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
               )}
               {/* Starting onwards here is the code of when the notes get created whenn you click on the add a note button and the functionality of it being edittable */}
               <div className="notes-scroll-container border-t border-gray-200 px-1 py-4 lg:h-[350px] overflow-y-auto">
-                {/* <div className="notes-scroll-container border-t border-gray-200 px-1 py-4 md:h-[10px] lg:h-[350px]"> */}
                 {notes?.map((note, index) => (
                   <div
                     key={index}
@@ -478,18 +463,9 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                       paddingLeft: "10px",
                     }}
                   >
-                    {/* <div
-                      className="note-text-title"
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        // alignItems: "center",
-                      }}
-                    > */}
                     <div className="flex justify-between items-center pb-2 font-semibold">
                       <span
                         style={{
-                          // fontSize: "13px",
                           whiteSpace: "nowrap",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
