@@ -1,26 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./CardThree.css";
-import { FiChevronRight, FiHeadphones, FiChevronLeft } from "react-icons/fi";
+import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import ReactMarkdown from "react-markdown";
 import AudioOverview from "./AudioOverview";
 import MindmapModal from "./MindmapModal";
 import {
-  CircleUser,
   Edit,
   EllipsisVertical,
   FileText,
   GraduationCap,
   Headphones,
-  LogOut,
   MessageSquareText,
   Network,
   Plus,
   Trash,
-  Trash2,
 } from "lucide-react";
 import remarkGfm from "remark-gfm";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import toast from "react-hot-toast";
 
 const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   const [menuOpenIndex, setMenuOpenIndex] = useState(null);
@@ -196,36 +194,29 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
       Response: "New note content...",
       editable: true,
     };
-    // setNotes([...notes, newNote]);
     setNotes([newNote, ...notes]);
   };
 
-  // function added for showing the menu when the user clicks on the three dot icon on a manually added note. that shows the delete option
-  const handleToggleMenu = (index) => {
-    setMenuOpenIndex(menuOpenIndex === index ? null : index);
-  };
-
   // function added to perform the functionality of deleting a manually added note
-  const handleDeleteNote = async (indexToDelete) => {
+  const handleDeleteNote = async (docKey, indexToDelete) => {
     const updatedNotes = notes.filter((_, i) => i !== indexToDelete);
     try {
-      const response = await fetch(`${endpoint}/delete_notes`, {
-        method: "DELETE",
+      const response = await fetch(`${endpoint}/remove-note`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `bearer ${authToken}`,
+          Authorization: `bearer ${localStorage.getItem("token")}`,
         },
-        // body:{}
-        // body: JSON.stringify(updatedNote),
+        body: JSON.stringify({ docKey: docKey }),
       });
+      if (response.ok) {
+        setNotes(updatedNotes);
+        toast.success("Note Deleted!");
+      }
     } catch (error) {
       console.error("error deleting the note", error);
+      toast.error("Error deleting the note. Please try again later");
     }
-
-    // kaam ka
-    // setNotes(updatedNotes);
-
-    // setMenuOpenIndex(null);
   };
 
   // this has been added to automatically close the menu showing the delete option when the user clicks outside anywhere on the screen
@@ -456,7 +447,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                 </div>
               )}
               {/* Starting onwards here is the code of when the notes get created whenn you click on the add a note button and the functionality of it being edittable */}
-              <div className="notes-scroll-container border-t border-gray-200 px-1 py-4 overflow-y-auto lg:h-[340px]">
+              <div className="notes-scroll-container border-t border-gray-200 px-1 py-4 overflow-y-auto lg:h-[150px]">
                 {notes?.map((note, index) => (
                   <div
                     key={index}
@@ -517,7 +508,10 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                                 variant="ghost"
                                 size="sm"
                                 className="justify-start gap-2 px-3 py-2 h-8 text-sm text-red-500 hover:bg-red-200 hover:text-red-500"
-                                onClick={handleDeleteNote(index)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteNote(note.docKey, index);
+                                }}
                               >
                                 <Trash className="h-3.5 w-3.5 text-red-500" />
                                 <span>Delete</span>
