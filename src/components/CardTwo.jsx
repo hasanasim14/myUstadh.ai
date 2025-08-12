@@ -23,7 +23,7 @@ const CardTwo = ({ onPinNote, selectedDocs }) => {
   };
 
   return (
-    <div className="h-[85vh] md:border md:rounded-lg border-gray-200">
+    <div className="h-[84vh] md:border md:rounded-lg border-gray-200">
       <div className="card-header">
         <span className="title">AI Chat</span>
         <div

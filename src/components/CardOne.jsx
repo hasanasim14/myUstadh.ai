@@ -393,7 +393,7 @@ const CardOne = ({ selectedDocs, setSelectedDocs, onCollapseChange }) => {
 
   return (
     <div
-      className={`h-[85vh] md:border md:rounded-lg border-gray-200 transition-all duration-300 overflow-hidden ${
+      className={`h-[84vh] md:border md:rounded-lg border-gray-200 transition-all duration-300 overflow-hidden ${
         isCollapsed ? "w-15" : "w-full"
       }`}
     >

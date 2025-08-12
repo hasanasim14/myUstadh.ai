@@ -5,15 +5,22 @@ import ReactMarkdown from "react-markdown";
 import AudioOverview from "./AudioOverview";
 import MindmapModal from "./MindmapModal";
 import {
+  CircleUser,
   Edit,
+  EllipsisVertical,
   FileText,
   GraduationCap,
+  Headphones,
+  LogOut,
   MessageSquareText,
   Network,
   Plus,
+  Trash,
+  Trash2,
 } from "lucide-react";
 import remarkGfm from "remark-gfm";
 import { Button } from "./ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   const [menuOpenIndex, setMenuOpenIndex] = useState(null);
@@ -199,10 +206,26 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   };
 
   // function added to perform the functionality of deleting a manually added note
-  const handleDeleteNote = (indexToDelete) => {
+  const handleDeleteNote = async (indexToDelete) => {
     const updatedNotes = notes.filter((_, i) => i !== indexToDelete);
-    setNotes(updatedNotes);
-    setMenuOpenIndex(null);
+    try {
+      const response = await fetch(`${endpoint}/delete_notes`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `bearer ${authToken}`,
+        },
+        // body:{}
+        // body: JSON.stringify(updatedNote),
+      });
+    } catch (error) {
+      console.error("error deleting the note", error);
+    }
+
+    // kaam ka
+    // setNotes(updatedNotes);
+
+    // setMenuOpenIndex(null);
   };
 
   // this has been added to automatically close the menu showing the delete option when the user clicks outside anywhere on the screen
@@ -343,19 +366,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
     }
   };
 
-  const menuBtnStyle = {
-    display: "block",
-    width: "100%",
-    background: "none",
-    border: "none",
-    outline: "none",
-    padding: "4px 4px",
-    textAlign: "left",
-    cursor: "pointer",
-    fontSize: "0.9rem",
-    color: "#333",
-  };
-
   const toggleCollapse = () => {
     setIsCollapsed((prev) => {
       const newCollapsed = !prev;
@@ -368,7 +378,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
 
   return (
     <div
-      className={`h-[85vh] md:border md:rounded-lg border-gray-200 transition-all duration-300 ease-in-out overflow-hidden ml-auto ${
+      className={`h-[84vh] md:border md:rounded-lg border-gray-200 transition-all duration-300 ease-in-out overflow-hidden ml-auto ${
         isCollapsed ? "w-15" : "w-full"
       }`}
     >
@@ -446,11 +456,11 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                 </div>
               )}
               {/* Starting onwards here is the code of when the notes get created whenn you click on the add a note button and the functionality of it being edittable */}
-              <div className="notes-scroll-container border-t border-gray-200 px-1 py-4 lg:h-[350px] overflow-y-auto">
+              <div className="notes-scroll-container border-t border-gray-200 px-1 py-4 overflow-y-auto lg:h-[340px]">
                 {notes?.map((note, index) => (
                   <div
                     key={index}
-                    className="note-text-block border border-gray-100 rounded-lg mb-3"
+                    className="border border-gray-200 rounded-lg mb-3"
                     onClick={() => handleNoteClick(index)}
                     style={{
                       position: "relative",
@@ -463,93 +473,61 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                       paddingLeft: "10px",
                     }}
                   >
-                    <div className="flex justify-between items-center pb-2 font-semibold">
-                      <span
-                        className="text-sm"
-                        style={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          maxWidth: "210px",
-                          display: "inline-block",
-                          verticalAlign: "middle",
-                        }}
-                      >
+                    <div className="flex justify-between items-center font-semibold">
+                      <span className="text-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-[210px] inline-block align-middle">
                         {note.Title}
                       </span>
 
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1">
                         <button
-                          className="bg-transparent cursor-pointer"
                           onClick={(e) => {
                             e.stopPropagation();
                             playNoteAudioFromAPI(note.Response, index);
                           }}
-                          style={{
-                            color:
-                              clickedIndex === index
-                                ? "red"
-                                : playingIndex === index
-                                ? "green"
-                                : "black",
-                            outline: "none",
-                          }}
+                          className={`bg-transparent cursor-pointer outline-none ${
+                            clickedIndex === index
+                              ? "text-red-500"
+                              : playingIndex === index
+                              ? "text-green-500"
+                              : "text-black"
+                          }`}
                         >
-                          <FiHeadphones />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleToggleMenu(index);
-                          }}
-                          style={{
-                            background: "transparent",
-                            border: "none",
-                            cursor: "pointer",
-                            fontSize: "18px",
-                            outline: "none",
-                            color: "black",
-                            lineHeight: "1",
-                          }}
-                        >
-                          ⋮
+                          <Headphones className="w-4 h-4" />
                         </button>
 
-                        {menuOpenIndex === index && (
-                          <div
-                            ref={menuRef}
-                            style={{
-                              position: "absolute",
-                              top: "100%",
-                              right: 0,
-                              backgroundColor: "white",
-                              zIndex: 10,
-                              minWidth: "120px",
-                              boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-                              borderRadius: "5px",
-                              padding: "2px",
-                            }}
-                          >
-                            <button
-                              style={menuBtnStyle}
+                        {/* Delete button popover */}
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              className="p-0"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleDeleteNote(index);
                               }}
                             >
-                              Delete
-                            </button>
-                          </div>
-                        )}
+                              <EllipsisVertical className="w-4 h-4" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            className="bg-white w-35 p-1 rounded-lg border text-white border-gray-200"
+                            align="end"
+                            sideOffset={8}
+                          >
+                            <div className="grid gap-0.5">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="justify-start gap-2 px-3 py-2 h-8 text-sm text-red-500 hover:bg-red-200 hover:text-red-500"
+                                onClick={handleDeleteNote(index)}
+                              >
+                                <Trash className="h-3.5 w-3.5 text-red-500" />
+                                <span>Delete</span>
+                              </Button>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
                       </div>
                     </div>
-                    <div
-                      style={{
-                        marginTop: "0px",
-                        color: "#555",
-                        fontSize: "12px",
-                      }}
-                    >
+                    <div className="mt-0 text-[#555] text-xs">
                       {note.editable ? (
                         <ReactMarkdown
                           components={{

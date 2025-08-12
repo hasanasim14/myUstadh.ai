@@ -3,7 +3,7 @@ import { FiInfo } from "react-icons/fi";
 import "./CardThree.css";
 import "./AudioOverview.css";
 import { Button } from "./ui/button";
-import { Info, Languages } from "lucide-react";
+import { Languages } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 const AudioOverview = ({ selectedDocs }) => {
