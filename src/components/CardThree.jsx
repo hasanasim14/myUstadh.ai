@@ -85,7 +85,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${endpoint}/generate-mindmap`, {
+      const res = await fetch(`${endpoint}/generate-mindmap`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -94,7 +94,10 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
         body: JSON.stringify({ selectedDocs }),
       });
 
-      const markdownContent = response.data.markdown || "No mindmap available.";
+      if (!res.ok) throw new Error(`Mindmap API failed: ${res.status}`);
+
+      const data = await res.json();
+      const markdownContent = data.markdown || "No mindmap available.";
 
       const newMindmapNote = {
         Title: "Mind Map",
@@ -103,15 +106,13 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
         type: "mindmap",
       };
 
-      setNotes((prevNotes) => [newMindmapNote, ...prevNotes]);
-      setMindmapMarkdown(markdownContent);
-      setMindmapOpen(true);
-      await fetchNotes();
+      // Just add it to notes like others
+      setNotes((prev) => [newMindmapNote, ...prev]);
+
+      // Refresh from backend after short delay to ensure it's saved
+      setTimeout(fetchNotes, 500);
     } catch (error) {
-      console.error(
-        "Error generating mindmap",
-        error.response?.data || error.message
-      );
+      console.error("Error generating mindmap:", error);
     } finally {
       setLoading(false);
     }
