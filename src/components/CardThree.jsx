@@ -106,9 +106,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
         type: "mindmap",
       };
 
-      // Just add it to notes like others
-      setNotes((prev) => [newMindmapNote, ...prev]);
-
       // Refresh from backend after short delay to ensure it's saved
       setTimeout(fetchNotes, 500);
     } catch (error) {
@@ -248,11 +245,12 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   const handleNoteClick = (index) => {
     const note = notes[index];
 
-    if (note.type === "mindmap") {
+    if (note.docType === "mindmap") {
       setMindmapMarkdown(note.Response);
       setMindmapOpen(true);
       return;
     }
+
     if (note.editable) {
       // open edit modal
       setCurrentEditNoteIndex(index);
@@ -303,6 +301,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
     }
   };
 
+  // removed the get-note-title api
   const handleFetchAndAddNote = async (type) => {
     let contentEndpoint = "";
 
@@ -311,8 +310,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
       contentEndpoint = `${endpoint}/briefing-doc`;
     else if (type === "FAQ") contentEndpoint = `${endpoint}/faq`;
     else return;
-
-    const titleEndpoint = `${endpoint}/get-note-title`;
 
     setLoading(true);
 
@@ -329,23 +326,14 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
         },
         body: JSON.stringify(wrappedDocs),
       });
+
       if (!contentResponse.ok)
         throw new Error(`Content API error: ${contentResponse.status}`);
+
       const content = await contentResponse.text();
 
-      // Fetch dynamic title
-      const titleResponse = await fetch(titleEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type, ...wrappedDocs }),
-      });
-      if (!titleResponse.ok)
-        throw new Error(`Title API error: ${titleResponse.status}`);
-      const rawTitle = await titleResponse.text();
-      const titleData = rawTitle.replace(/^"(.*)"$/, "$1");
-
       const newNote = {
-        Title: titleData,
+        Title: type, // Fallback to using the type as title
         content: content || "No content available.",
         editable: false,
       };

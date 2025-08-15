@@ -43,7 +43,7 @@ export default function App() {
       Response: answer,
       editable: false,
     };
-    setNotes((prev) => [...prev, newNote]);
+    setNotes((prev) => [newNote, ...prev]);
 
     // saving note before sending
     try {
