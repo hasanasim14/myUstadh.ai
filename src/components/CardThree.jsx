@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import AudioOverview from "./AudioOverview";
 import MindmapModal from "./MindmapModal";
 import {
+  ChevronRight,
   Edit,
   EllipsisVertical,
   FileText,
@@ -19,6 +20,7 @@ import remarkGfm from "remark-gfm";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import toast from "react-hot-toast";
+import { ScrollArea } from "./ui/scrollarea";
 
 const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   const [menuOpenIndex, setMenuOpenIndex] = useState(null);
@@ -63,13 +65,13 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   }, []);
 
   const fetchNotes = async () => {
-    const authToken = localStorage.getItem("token");
+    const course = localStorage.getItem("course");
     try {
-      const res = await fetch(`${endpoint}/get-notes`, {
+      const res = await fetch(`${endpoint}/get-notes/${course}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `bearer ${authToken}`,
+          Authorization: `bearer ${localStorage.getItem("token")}`,
         },
       });
 
@@ -83,7 +85,10 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   // function added to fetch the mindmap from the backend when the user clicks on the Mind Map button
   const fetchMindmap = async () => {
     setLoading(true);
-
+    const payload = {
+      selectedDocs: selectedDocs,
+      course: localStorage.getItem("course"),
+    };
     try {
       const res = await fetch(`${endpoint}/generate-mindmap`, {
         method: "POST",
@@ -91,7 +96,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
           "Content-Type": "application/json",
           Authorization: `bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify({ selectedDocs }),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) throw new Error(`Mindmap API failed: ${res.status}`);
@@ -279,7 +284,10 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
           "Content-Type": "application/json",
           Authorization: `bearer ${authToken}`,
         },
-        body: JSON.stringify(updatedNote),
+        body: JSON.stringify({
+          ...updatedNote,
+          course: localStorage.getItem("course"),
+        }),
       });
 
       if (!res.ok) throw new Error("Save failed");
@@ -315,7 +323,10 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
 
     try {
       const authToken = localStorage.getItem("token");
-      const wrappedDocs = { selectedDocs };
+      const wrappedDocs = {
+        selectedDocs: selectedDocs,
+        course: localStorage.getItem("course"),
+      };
 
       // Fetch content
       const contentResponse = await fetch(contentEndpoint, {
@@ -358,8 +369,8 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
 
   return (
     <div
-      className={`h-[84vh] md:border md:rounded-lg border-gray-200 transition-all duration-300 ease-in-out overflow-hidden ml-auto ${
-        isCollapsed ? "w-15" : "w-full"
+      className={`h-[85vh] md:border md:rounded-lg border-gray-200 transition-all duration-300 ease-in-out overflow-hidden ml-auto text-black ${
+        isCollapsed ? "w-15" : "w-full max-w-sm lg:max-w-md xl:max-w-lg"
       }`}
     >
       {isCollapsed ? (
@@ -368,43 +379,39 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
             className="cursor-pointer p-2 rounded-lg hover:bg-gray-200 text-[#64748b]"
             onClick={toggleCollapse}
           >
-            <FiChevronLeft />
+            <ChevronRight />
           </button>
         </div>
       ) : (
-        <>
-          <div className="card-header">
-            <span className="title">Library</span>
+        <div className="flex flex-col h-full">
+          <div className="flex justify-between items-center font-semibold border-b border-gray-300 p-2 flex-shrink-0 bg-[#F8FAFC]">
+            <span className="p-2 font-poppins">Library</span>
             <button
-              className="cursor-pointer p-2 m-2 rounded-lg hover:bg-gray-200 text-[#64748b]"
+              className="cursor-pointer p-2 rounded-lg hover:bg-gray-200 text-[#64748b]"
               onClick={toggleCollapse}
             >
-              <FiChevronRight />
+              <ChevronRight className="h-5 w-5" />
             </button>
-            {/* </span> */}
           </div>
 
-          <div className="card-container">
+          <div className="flex-shrink-0 p-3 pb-0">
             <AudioOverview selectedDocs={selectedDocs} />
 
-            <div className="notes-section">
-              {/* <span className="section-title" style={{ fontSize: "13px" }}>
-                Notes
-              </span> */}
-              <button
-                className="library-button w-full mb-2"
+            <div className="border-t border-gray-200 pt-3 p">
+              <Button
+                className="library-button w-full mb-3"
                 onClick={handleAddNote}
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add note
-              </button>
+              </Button>
 
               <div className="flex flex-wrap gap-2 justify-center max-w-md mx-auto">
                 {noteTypes.map(({ label, icon: Icon }) => (
                   <Button
                     disabled={!selectedDocs.length}
                     key={label}
-                    className="library-button w-[calc(50%-4px)]"
+                    className="library-button w-[calc(50%-4px)] p-2"
                     onClick={() => {
                       if (label === "Mind Map") {
                         fetchMindmap();
@@ -413,140 +420,129 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                       }
                     }}
                   >
-                    <Icon className="mr-2 h-4 w-4" />
-                    {label}
+                    <Icon className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">{label}</span>
+                    <span className="sm:hidden">{label.split(" ")[0]}</span>
                   </Button>
                 ))}
               </div>
 
               {loading && (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "8px",
-                    marginTop: "10px",
-                    fontSize: "14px",
-                    color: "#555",
-                  }}
-                >
-                  <div className="spinner" />
+                <div className="flex items-center justify-center gap-2 mb-4 text-sm text-[#555]">
+                  <div className="w-4 h-4 border-2 border-gray-300 border-t-[#555] rounded-full animate-spin [animation-duration:0.6s]" />
                   Generating...
                 </div>
               )}
-              {/* Starting onwards here is the code of when the notes get created whenn you click on the add a note button and the functionality of it being edittable */}
-              <div className="notes-scroll-container border-t border-gray-200 px-1 py-4 overflow-y-auto lg:h-[150px]">
-                {notes?.map((note, index) => (
-                  <div
-                    key={index}
-                    className="border border-gray-200 rounded-lg mb-3"
-                    onClick={() => handleNoteClick(index)}
-                    style={{
-                      position: "relative",
-                      cursor: "pointer",
-                      minHeight: "20px",
-                      maxHeight: "55px",
-                      overflow: "hidden",
-                      paddingBottom: "10px",
-                      paddingRight: "10px",
-                      paddingLeft: "10px",
-                    }}
-                  >
-                    <div className="flex justify-between items-center font-semibold">
-                      <span className="text-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-[210px] inline-block align-middle">
-                        {note.Title}
-                      </span>
-
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            playNoteAudioFromAPI(note.Response, index);
-                          }}
-                          className={`bg-transparent cursor-pointer outline-none ${
-                            clickedIndex === index
-                              ? "text-red-500"
-                              : playingIndex === index
-                              ? "text-green-500"
-                              : "text-black"
-                          }`}
-                        >
-                          <Headphones className="w-4 h-4" />
-                        </button>
-
-                        {/* Delete button popover */}
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              className="p-0"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                              }}
-                            >
-                              <EllipsisVertical className="w-4 h-4" />
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent
-                            className="bg-white w-35 p-1 rounded-lg border text-white border-gray-200"
-                            align="end"
-                            sideOffset={8}
-                          >
-                            <div className="grid gap-0.5">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="justify-start gap-2 px-3 py-2 h-8 text-sm text-red-500 hover:bg-red-200 hover:text-red-500"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteNote(note.docKey, index);
-                                }}
-                              >
-                                <Trash className="h-3.5 w-3.5 text-red-500" />
-                                <span>Delete</span>
-                              </Button>
-                            </div>
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                    </div>
-                    <div className="mt-0 text-[#555] text-xs">
-                      {note.editable ? (
-                        <ReactMarkdown
-                          components={{
-                            p: ({ node, ...props }) => (
-                              <p
-                                style={{
-                                  fontSize: "0.87rem",
-                                  color: "#334",
-                                  lineHeight: "1.4",
-                                  margin: 0,
-                                }}
-                                {...props}
-                              />
-                            ),
-                          }}
-                        >
-                          {note.Response}
-                        </ReactMarkdown>
-                      ) : (
-                        <div>
-                          {" "}
-                          {(note.Response || "")
-                            .replace(/\\n/g, "\n")
-                            .replace(/^"(.*)"$/, "$1")
-                            .replace(/^["']|["']$/g, "")
-                            .replace(/^#+\s*/gm, "")
-                            .slice(0, 50)}
-                          ...
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
+
+          <div className="flex-1 overflow-hidden pl-3 py-3">
+            <ScrollArea className="h-full">
+              <div className="space-y-3 pr-4">
+                {notes && notes.length > 0 ? (
+                  notes.map((note, index) => (
+                    <div
+                      key={index}
+                      className="border border-gray-200 rounded-lg mb-3 p-2"
+                      onClick={() => handleNoteClick(index)}
+                    >
+                      <div className="flex justify-between items-center font-semibold">
+                        <span className="text-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-[210px] inline-block align-middle">
+                          {note.Title}
+                        </span>
+
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              playNoteAudioFromAPI(note.Response, index);
+                            }}
+                            className={`bg-transparent cursor-pointer outline-none ${
+                              clickedIndex === index
+                                ? "text-red-500"
+                                : playingIndex === index
+                                ? "text-green-500"
+                                : "text-black"
+                            }`}
+                          >
+                            <Headphones className="w-4 h-4" />
+                          </button>
+
+                          {/* Delete button popover */}
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                className="p-0"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                }}
+                              >
+                                <EllipsisVertical className="w-4 h-4" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              className="bg-white w-35 p-1 rounded-lg border text-white border-gray-200"
+                              align="end"
+                              sideOffset={8}
+                            >
+                              <div className="grid gap-0.5">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="justify-start gap-2 px-3 py-2 h-8 text-sm text-red-500 hover:bg-red-200 hover:text-red-500"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteNote(note.docKey, index);
+                                  }}
+                                >
+                                  <Trash className="h-3.5 w-3.5 text-red-500" />
+                                  <span>Delete</span>
+                                </Button>
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      </div>
+
+                      <div className="text-[#555] text-xs sm:text-sm">
+                        {note.editable ? (
+                          <ReactMarkdown
+                            components={{
+                              p: ({ node, ...props }) => (
+                                <p
+                                  className="text-xs sm:text-sm leading-relaxed m-0 line-clamp-2"
+                                  {...props}
+                                />
+                              ),
+                            }}
+                          >
+                            {note.Response}
+                          </ReactMarkdown>
+                        ) : (
+                          <div className="line-clamp-1 text-xs">
+                            {note.Response.replace(/\\n/g, " ")
+                              .replace(/^"(.*)"$/, "$1")
+                              .replace(/^["']|["']$/g, "")
+                              .replace(/^#+\s*/gm, "")
+                              .slice(0, 100)}
+                            {note.Response.length > 100 && "..."}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <p>
+                      No notes yet. Click "Add note" to create your first note!
+                    </p>
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          </div>
+
+          {/* Modal Components */}
           {isEditModalOpen && (
             <div className="modal-overlay">
               <div
@@ -571,8 +567,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                   placeholder="Note Title"
                   style={{
                     width: "100%",
-
-                    marginLeft: "0px",
                     marginBottom: "10px",
                     padding: "10px",
                     borderRadius: "6px",
@@ -620,6 +614,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
             </div>
           )}
 
+          {/* View Modal */}
           {isViewModalOpen && currentViewNote && (
             <div
               className="modal-overlay"
@@ -700,7 +695,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
             onClose={() => setMindmapOpen(false)}
             markdown={mindmapMarkdown}
           />
-        </>
+        </div>
       )}
     </div>
   );

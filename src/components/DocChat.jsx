@@ -5,6 +5,8 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import RemoveMarkdown from "remove-markdown";
 import "./DocChat.css";
+import MarkdownViewer from "./MarkdownViewer";
+import { useNavigate } from "react-router-dom";
 
 const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
   const initialBotMessage = {
@@ -22,13 +24,14 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
   const [playingIndex, setPlayingIndex] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
+  const [openDocUrl, setOpenDocUrl] = useState(null);
 
   const audioRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const streamRef = useRef(null);
   const abortControllers = useRef({});
-
+  const navigate = useNavigate();
   const endpoint = import.meta.env.VITE_API_URL;
 
   // check for session id for get chat api
@@ -272,7 +275,10 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
             "Content-Type": "application/json",
             Authorization: `bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify(payload),
+          body: JSON.stringify({
+            ...payload,
+            course: localStorage.getItem("course"),
+          }),
         });
       } else {
         response = await fetch(`${endpoint}/query_with_filter`, {
@@ -281,7 +287,10 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
             "Content-Type": "application/json",
             Authorization: `bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify(filterpayload),
+          body: JSON.stringify({
+            ...filterpayload,
+            course: localStorage.getItem("course"),
+          }),
         });
       }
 
@@ -366,25 +375,19 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
                     remarkPlugins={[remarkGfm]}
                     components={{
                       a: ({ node, ...props }) => (
-                        <a
+                        <span
                           {...props}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 underline"
-                        />
-                      ),
-                      table: ({ node, ...props }) => (
-                        <table className="table-auto border border-collapse border-gray-300 my-4">
+                          onClick={(e) => {
+                            e.preventDefault();
+                            window.open(
+                              `/viewer?url=${encodeURIComponent(props.href)}`,
+                              "_blank"
+                            );
+                          }}
+                          className="text-blue-600 underline cursor-pointer"
+                        >
                           {props.children}
-                        </table>
-                      ),
-                      th: ({ node, ...props }) => (
-                        <th className="border px-4 py-2 bg-gray-100 text-left">
-                          {props.children}
-                        </th>
-                      ),
-                      td: ({ node, ...props }) => (
-                        <td className="border px-4 py-2">{props.children}</td>
+                        </span>
                       ),
                     }}
                   >
@@ -499,6 +502,9 @@ const DocChat = ({ selectedDocs, refreshTrigger, onPinNote, setIsLoading }) => {
           <SendHorizonal className="w-6 h-6" />
         </button>
       </div>
+      {openDocUrl && (
+        <MarkdownViewer url={openDocUrl} onClose={() => setOpenDocUrl(null)} />
+      )}
     </div>
   );
 };
