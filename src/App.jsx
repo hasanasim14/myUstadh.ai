@@ -57,6 +57,7 @@ export default function App() {
         body: JSON.stringify({
           title: newNote.Title,
           note: newNote.Response,
+          course: localStorage.getItem("course"),
         }),
       });
     } catch (error) {
@@ -185,6 +186,7 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/viewer" element={<MarkdownViewer />} />
 
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
