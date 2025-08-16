@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Input } from "./ui/input";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 import swirl from "../assets/login-image.jpg";
 import toast from "react-hot-toast";
-import { Input } from "./ui/input";
-// import { toast } from "react-toastify";
 
 export default function AuthForm() {
   const navigate = useNavigate();
@@ -52,7 +53,6 @@ export default function AuthForm() {
   };
 
   const handleSubmit = async () => {
-    // ✅ Prevent submission with empty or invalid inputs
     if (!formData.email || !formData.password) {
       toast.error("Please fill in all fields");
       return;
@@ -70,7 +70,7 @@ export default function AuthForm() {
       const res = await fetch(`${api_endpoint}${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, googleLogin: false }),
       });
 
       const data = await res.json();
@@ -93,6 +93,37 @@ export default function AuthForm() {
       toast.error("Request Failed. Please try again.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async (credentialResponse) => {
+    try {
+      const decoded = jwtDecode(credentialResponse.credential);
+
+      const response = await fetch(`${api_endpoint}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: decoded?.email,
+          googleLogin: true,
+        }),
+      });
+
+      if (!response.ok) {
+        toast.error("Login through Google failed. Please try again later");
+        throw new Error("API request failed");
+      }
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("token", data?.access_token);
+        toast.success("Login Successful");
+        setTimeout(() => navigate("/courses"), 1000);
+      }
+    } catch (error) {
+      console.error("Login or API error:", error);
     }
   };
 
@@ -216,6 +247,15 @@ export default function AuthForm() {
                 "Register"
               )}
             </button>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">OR</span>
+            </div>
+            <GoogleLogin
+              onSuccess={handleGoogleSignIn}
+              onError={() => {
+                console.log("Login Failed");
+              }}
+            />
 
             {/* Toggle Form Button */}
             <p className="text-sm text-center mt-2">
