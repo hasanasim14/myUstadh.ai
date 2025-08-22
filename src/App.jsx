@@ -9,6 +9,7 @@ import MarkdownViewer from "./components/MarkdownViewer";
 import { Routes, Route, Navigate } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import CourseCatalog from "./components/CourseCatalog";
+import toast from "react-hot-toast";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -60,6 +61,10 @@ export default function App() {
           course: localStorage.getItem("course"),
         }),
       });
+
+      if (res.ok) {
+        toast.success("Note Pinned!");
+      }
     } catch (error) {
       console.error("unable to save the pinned note ", error);
     }

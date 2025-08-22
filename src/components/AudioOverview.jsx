@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { FiInfo } from "react-icons/fi";
 import "./CardThree.css";
 import "./AudioOverview.css";
 import { Button } from "./ui/button";
 import { Languages } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
-const AudioOverview = ({ selectedDocs }) => {
+const AudioOverview = ({ selectedDocs, onLoadingChange }) => {
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("English");
   const [loading, setLoading] = useState(false);
@@ -53,8 +52,9 @@ const AudioOverview = ({ selectedDocs }) => {
         if (contentType && contentType.includes("audio")) {
           const blob = await response.blob();
           const audioObjectUrl = URL.createObjectURL(blob);
-          setAudioUrl(audioObjectUrl);
+          onPodcastGenerated?.(audioObjectUrl);
           setLoading(false);
+          onLoadingChange?.(false);
           clearPolling();
           localStorage.removeItem("Key");
         } else {
@@ -62,9 +62,10 @@ const AudioOverview = ({ selectedDocs }) => {
         }
       } catch (err) {
         console.error("Polling error:", err);
-        setError("Failed to fetch podcast audio.");
+        // setError("Failed to fetch podcast audio.");
         clearPolling();
         setLoading(false);
+        onLoadingChange?.(false); // Notify parent that podcast generation failed
       }
     }, 30000); // every 30 seconds
   };
@@ -72,6 +73,7 @@ const AudioOverview = ({ selectedDocs }) => {
   const handleGenerateClick = async () => {
     localStorage.removeItem("Key"); // remove previous session key
     setLoading(true);
+    onLoadingChange?.(true); // Notify parent that podcast generation started
     setError(null);
     setAudioUrl(null);
     clearPolling(); // just in case
@@ -99,9 +101,10 @@ const AudioOverview = ({ selectedDocs }) => {
       localStorage.setItem("Key", key);
       pollForPodcast(key);
     } catch (err) {
-      console.error("Failed to generate podcast:", err);
-      setError(err.message || "Failed to generate podcast");
+      // console.error("Failed to generate podcast:", err);
+      // setError(err.message || "Failed to generate podcast");
       setLoading(false);
+      onLoadingChange?.(false); // Notify parent that podcast generation failed
     }
   };
 
@@ -158,33 +161,20 @@ const AudioOverview = ({ selectedDocs }) => {
         <Button
           className="flex items-center justify-center bg-[#4259ff] text-white rounded-xl p-2 text-sm font-semibold cursor-pointer hover:bg-[#3a4bda] w-full"
           onClick={handleGenerateClick}
-          disabled={loading || selectedDocs.length === 0}
+          disabled={selectedDocs.length === 0}
         >
-          {loading ? (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <div className="spinner" />
-            </div>
-          ) : (
-            "Generate"
-          )}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          ></div>
+          Generate
         </Button>
       </div>
 
       {error && <div style={{ color: "red", marginTop: "8px" }}>{error}</div>}
-
-      {audioUrl && (
-        <div style={{ marginTop: "16px" }}>
-          <audio controls src={audioUrl} style={{ width: "100%" }}>
-            Your browser does not support the audio element.
-          </audio>
-        </div>
-      )}
     </div>
   );
 };

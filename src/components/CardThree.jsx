@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./CardThree.css";
-import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import ReactMarkdown from "react-markdown";
 import AudioOverview from "./AudioOverview";
 import MindmapModal from "./MindmapModal";
@@ -11,16 +10,18 @@ import {
   FileText,
   GraduationCap,
   Headphones,
+  Loader2,
   MessageSquareText,
   Network,
   Plus,
   Trash,
 } from "lucide-react";
-import remarkGfm from "remark-gfm";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { ScrollArea, ScrollBar } from "./ui/scrollarea";
+import { PopoverClose } from "@radix-ui/react-popover";
 import toast from "react-hot-toast";
-import { ScrollArea } from "./ui/scrollarea";
+import remarkGfm from "remark-gfm";
 
 const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   const [menuOpenIndex, setMenuOpenIndex] = useState(null);
@@ -30,20 +31,30 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   const [currentEditNoteIndex, setCurrentEditNoteIndex] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [editContent, setEditContent] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loadingStates, setLoadingStates] = useState(new Set());
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [currentViewNote, setCurrentViewNote] = useState(null);
   const [playingIndex, setPlayingIndex] = useState(null);
-  const audioRef = useRef(null);
   const [clickedIndex, setClickedIndex] = useState(null);
-  // states for the mindmap modal
   const [mindmapOpen, setMindmapOpen] = useState(false);
   const [mindmapMarkdown, setMindmapMarkdown] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const audioRef = useRef(null);
   const abortControllers = useRef({});
   const endpoint = import.meta.env.VITE_API_URL;
 
-  // better formatting for markdown
+  const addLoadingState = (type) => {
+    setLoadingStates((prev) => new Set([...prev, type]));
+  };
+
+  const removeLoadingState = (type) => {
+    setLoadingStates((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(type);
+      return newSet;
+    });
+  };
+
   const renderers = {
     h4: ({ children }) => (
       <h4 style={{ fontWeight: "bold", marginTop: "1.5rem" }}>{children}</h4>
@@ -82,9 +93,10 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
     }
   };
 
-  // function added to fetch the mindmap from the backend when the user clicks on the Mind Map button
   const fetchMindmap = async () => {
-    setLoading(true);
+    const loadingKey = `Mind Map-${Date.now()}`;
+    addLoadingState(loadingKey);
+
     const payload = {
       selectedDocs: selectedDocs,
       course: localStorage.getItem("course"),
@@ -105,22 +117,20 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
       const markdownContent = data.markdown || "No mindmap available.";
 
       const newMindmapNote = {
-        Title: "Mind Map",
+        Title: `Mind Map - ${new Date().toLocaleString()}`,
         Response: markdownContent,
         editable: false,
         type: "mindmap",
       };
 
-      // Refresh from backend after short delay to ensure it's saved
       setTimeout(fetchNotes, 500);
     } catch (error) {
       console.error("Error generating mindmap:", error);
     } finally {
-      setLoading(false);
+      removeLoadingState(loadingKey);
     }
   };
 
-  // function added to play the audio of the note content when the user clicks on the headphone icon
   const playNoteAudioFromAPI = async (text, index) => {
     if (clickedIndex === index && !playingIndex) {
       const controller = abortControllers.current[index];
@@ -190,17 +200,15 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
     }
   };
 
-  // function added to handle the addition of a manual note when the user clicks on Add a Note button
   const handleAddNote = () => {
     const newNote = {
-      Title: `New Note`,
+      Title: `New Note - ${new Date().toLocaleString()}`,
       Response: "New note content...",
       editable: true,
     };
     setNotes([newNote, ...notes]);
   };
 
-  // function added to perform the functionality of deleting a manually added note
   const handleDeleteNote = async (docKey, indexToDelete) => {
     const updatedNotes = notes.filter((_, i) => i !== indexToDelete);
     try {
@@ -222,15 +230,12 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
     }
   };
 
-  // this has been added to automatically close the menu showing the delete option when the user clicks outside anywhere on the screen
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Close delete menu
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMenuOpenIndex(null);
       }
 
-      // Close view modal
       if (
         isViewModalOpen &&
         modalRef.current &&
@@ -246,7 +251,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
     };
   }, [isViewModalOpen]);
 
-  // function added that handles the click on a note, if the note is a mindmap, it opens the mindmap modal, if the note is editable, it opens the edit modal, otherwise it opens the view-only modal
   const handleNoteClick = (index) => {
     const note = notes[index];
 
@@ -257,19 +261,16 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
     }
 
     if (note.editable) {
-      // open edit modal
       setCurrentEditNoteIndex(index);
       setEditTitle(note.Title);
       setEditContent(note.Response);
       setIsEditModalOpen(true);
     } else {
-      // open view-only modal
       setCurrentViewNote(note);
       setIsViewModalOpen(true);
     }
   };
 
-  // function added that handles the edit made to a manually added note in the modal
   const handleSaveEdit = async () => {
     const updatedNote = {
       title: editTitle,
@@ -292,7 +293,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
 
       if (!res.ok) throw new Error("Save failed");
 
-      // Set editable to false after successful save
       const newNotes = [...notes];
       newNotes[currentEditNoteIndex] = {
         ...newNotes[currentEditNoteIndex],
@@ -302,14 +302,13 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
       };
       setNotes(newNotes);
 
-      await fetchNotes(); // Refresh with server copy
+      await fetchNotes();
       setIsEditModalOpen(false);
     } catch (error) {
       console.error("Failed to save note:", error);
     }
   };
 
-  // removed the get-note-title api
   const handleFetchAndAddNote = async (type) => {
     let contentEndpoint = "";
 
@@ -319,7 +318,8 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
     else if (type === "FAQ") contentEndpoint = `${endpoint}/faq`;
     else return;
 
-    setLoading(true);
+    const loadingKey = `${type}-${Date.now()}`;
+    addLoadingState(loadingKey);
 
     try {
       const authToken = localStorage.getItem("token");
@@ -328,7 +328,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
         course: localStorage.getItem("course"),
       };
 
-      // Fetch content
       const contentResponse = await fetch(contentEndpoint, {
         method: "POST",
         headers: {
@@ -344,7 +343,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
       const content = await contentResponse.text();
 
       const newNote = {
-        Title: type, // Fallback to using the type as title
+        Title: `${type} - ${new Date().toLocaleString()}`,
         content: content || "No content available.",
         editable: false,
       };
@@ -353,7 +352,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
     } catch (error) {
       console.error(`Failed to fetch ${type}:`, error);
     } finally {
-      setLoading(false);
+      removeLoadingState(loadingKey);
     }
   };
 
@@ -367,9 +366,58 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
     });
   };
 
+  const handlePodcastLoadingChange = (isLoading) => {
+    const loadingKey = `Podcast-${Date.now()}`;
+    if (isLoading) {
+      addLoadingState(loadingKey);
+      window.currentPodcastLoadingKey = loadingKey;
+    } else {
+      if (window.currentPodcastLoadingKey) {
+        removeLoadingState(window.currentPodcastLoadingKey);
+        delete window.currentPodcastLoadingKey;
+      }
+    }
+  };
+
+  // fetch podcast audio
+  const PodcastAudio = ({ docKey }) => {
+    const [audioUrl, setAudioUrl] = useState(null);
+
+    useEffect(() => {
+      const fetchPodcast = async () => {
+        try {
+          const res = await fetch(`${endpoint}/fetch/podcast/${docKey}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `bearer ${localStorage.getItem("token")}`,
+            },
+          });
+          if (!res.ok) throw new Error("Failed to fetch podcast");
+          const blob = await res.blob();
+          setAudioUrl(URL.createObjectURL(blob));
+        } catch (err) {
+          console.error("Error fetching podcast:", err);
+        }
+      };
+
+      fetchPodcast();
+    }, [docKey]);
+
+    if (!audioUrl) {
+      return (
+        <div className="flex items-center gap-2 text-gray-500 text-xs">
+          <Loader2 className="h-3 w-3 animate-spin" /> Loading podcast...
+        </div>
+      );
+    }
+
+    return <audio controls src={audioUrl} className="w-full mt-2" />;
+  };
+
   return (
     <div
-      className={`h-[85vh] md:border md:rounded-lg border-gray-200 transition-all duration-300 ease-in-out overflow-hidden ml-auto text-black ${
+      className={`h-[84vh] md:border md:rounded-lg border-gray-200 transition-all duration-300 ease-in-out overflow-hidden ml-auto text-black ${
         isCollapsed ? "w-15" : "w-full max-w-sm lg:max-w-md xl:max-w-lg"
       }`}
     >
@@ -395,7 +443,19 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
           </div>
 
           <div className="flex-shrink-0 p-3 pb-0">
-            <AudioOverview selectedDocs={selectedDocs} />
+            <AudioOverview
+              selectedDocs={selectedDocs}
+              onLoadingChange={handlePodcastLoadingChange}
+              onPodcastGenerated={(audioUrl) => {
+                const newNote = {
+                  Title: `Podcast - ${new Date().toLocaleString()}`,
+                  Response: audioUrl,
+                  editable: false,
+                  type: "Podcast",
+                };
+                setNotes((prev) => [newNote, ...prev]);
+              }}
+            />
 
             <div className="border-t border-gray-200 pt-3 p">
               <Button
@@ -427,48 +487,67 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                 ))}
               </div>
 
-              {loading && (
-                <div className="flex items-center justify-center gap-2 mb-4 text-sm text-[#555]">
-                  <div className="w-4 h-4 border-2 border-gray-300 border-t-[#555] rounded-full animate-spin [animation-duration:0.6s]" />
-                  Generating...
+              {loadingStates.size > 0 && (
+                <div className="space-y-2 mt-3">
+                  {Array.from(loadingStates).map((loadingKey) => {
+                    const displayType = loadingKey.includes("-")
+                      ? loadingKey.split("-")[0]
+                      : loadingKey;
+                    return (
+                      <div
+                        key={loadingKey}
+                        className="border border-gray-200 rounded-lg p-4 flex items-center gap-2"
+                      >
+                        <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
+                        <span className="text-sm text-gray-700 animate-pulse">
+                          Generating {displayType}...
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
           </div>
 
           <div className="flex-1 overflow-hidden pl-3 py-3">
-            <ScrollArea className="h-full">
-              <div className="space-y-3 pr-4">
+            <ScrollArea className="h-full pr-2">
+              <div className="space-y-3">
                 {notes && notes.length > 0 ? (
                   notes.map((note, index) => (
                     <div
-                      key={index}
-                      className="border border-gray-200 rounded-lg mb-3 p-2"
+                      key={note.docKey || index}
+                      className="border border-gray-200 rounded-lg mb-3 p-1"
                       onClick={() => handleNoteClick(index)}
                     >
                       <div className="flex justify-between items-center font-semibold">
+                        {/* Title */}
                         <span className="text-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-[210px] inline-block align-middle">
                           {note.Title}
                         </span>
 
+                        {/* Actions */}
                         <div className="flex items-center gap-1">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              playNoteAudioFromAPI(note.Response, index);
-                            }}
-                            className={`bg-transparent cursor-pointer outline-none ${
-                              clickedIndex === index
-                                ? "text-red-500"
-                                : playingIndex === index
-                                ? "text-green-500"
-                                : "text-black"
-                            }`}
-                          >
-                            <Headphones className="w-4 h-4" />
-                          </button>
+                          {/* Play Audio (only if NOT podcast) */}
+                          {note.docType !== "Podcast" && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                playNoteAudioFromAPI(note.Response, index);
+                              }}
+                              className={`bg-transparent cursor-pointer outline-none ${
+                                clickedIndex === index
+                                  ? "text-red-500"
+                                  : playingIndex === index
+                                  ? "text-green-500"
+                                  : "text-black"
+                              }`}
+                            >
+                              <Headphones className="w-4 h-4" />
+                            </button>
+                          )}
 
-                          {/* Delete button popover */}
+                          {/* Popover Menu */}
                           <Popover>
                             <PopoverTrigger asChild>
                               <Button
@@ -481,31 +560,36 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                               </Button>
                             </PopoverTrigger>
                             <PopoverContent
-                              className="bg-white w-35 p-1 rounded-lg border text-white border-gray-200"
+                              className="bg-white w-36 p-1 rounded-lg border text-black border-gray-200"
                               align="end"
                               sideOffset={8}
                             >
                               <div className="grid gap-0.5">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="justify-start gap-2 px-3 py-2 h-8 text-sm text-red-500 hover:bg-red-200 hover:text-red-500"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDeleteNote(note.docKey, index);
-                                  }}
-                                >
-                                  <Trash className="h-3.5 w-3.5 text-red-500" />
-                                  <span>Delete</span>
-                                </Button>
+                                <PopoverClose asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="justify-start gap-2 px-3 py-2 h-8 text-sm text-red-500 hover:bg-red-200 hover:text-red-500"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleDeleteNote(note.docKey, index);
+                                    }}
+                                  >
+                                    <Trash className="h-3.5 w-3.5 text-red-500" />
+                                    <span>Delete</span>
+                                  </Button>
+                                </PopoverClose>
                               </div>
                             </PopoverContent>
                           </Popover>
                         </div>
                       </div>
 
-                      <div className="text-[#555] text-xs sm:text-sm">
-                        {note.editable ? (
+                      {/* Note Content */}
+                      <div className="text-[#555] text-xs sm:text-sm mt-2">
+                        {note.docType === "Podcast" ? (
+                          <PodcastAudio docKey={note.docKey} />
+                        ) : note.editable ? (
                           <ReactMarkdown
                             components={{
                               p: ({ node, ...props }) => (
@@ -520,12 +604,12 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                           </ReactMarkdown>
                         ) : (
                           <div className="line-clamp-1 text-xs">
-                            {note.Response.replace(/\\n/g, " ")
+                            {note?.Response?.replace(/\\n/g, " ")
                               .replace(/^"(.*)"$/, "$1")
                               .replace(/^["']|["']$/g, "")
                               .replace(/^#+\s*/gm, "")
                               .slice(0, 100)}
-                            {note.Response.length > 100 && "..."}
+                            {note?.Response?.length > 100 && "..."}
                           </div>
                         )}
                       </div>
@@ -534,15 +618,17 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                 ) : (
                   <div className="text-center py-8">
                     <p>
-                      No notes yet. Click "Add note" to create your first note!
+                      No notes yet. Click &quot;Add note&quot; to create your
+                      first note!
                     </p>
                   </div>
                 )}
               </div>
+
+              <ScrollBar orientation="vertical" />
             </ScrollArea>
           </div>
 
-          {/* Modal Components */}
           {isEditModalOpen && (
             <div className="modal-overlay">
               <div
@@ -614,7 +700,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
             </div>
           )}
 
-          {/* View Modal */}
           {isViewModalOpen && currentViewNote && (
             <div
               className="modal-overlay"
@@ -645,7 +730,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                   scrollbarGutter: "stable",
                 }}
               >
-                {/* Sticky Header */}
                 <div
                   style={{
                     position: "sticky",
@@ -675,7 +759,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                   </button>
                 </div>
 
-                {/* Markdown Content */}
                 <div style={{ padding: "20px" }}>
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
@@ -700,4 +783,5 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
     </div>
   );
 };
+
 export default CardThree;
