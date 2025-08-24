@@ -39,6 +39,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
   const [mindmapOpen, setMindmapOpen] = useState(false);
   const [mindmapMarkdown, setMindmapMarkdown] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [podcastCache, setPodcastCache] = useState({});
   const audioRef = useRef(null);
   const abortControllers = useRef({});
   const endpoint = import.meta.env.VITE_API_URL;
@@ -218,9 +219,16 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
           "Content-Type": "application/json",
           Authorization: `bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify({ docKey: docKey }),
+        body: JSON.stringify({ docKey }),
       });
       if (response.ok) {
+        // cleanup cached blob
+        if (podcastCache[docKey]) {
+          URL.revokeObjectURL(podcastCache[docKey]);
+          const newCache = { ...podcastCache };
+          delete newCache[docKey];
+          setPodcastCache(newCache);
+        }
         setNotes(updatedNotes);
         toast.success("Note Deleted!");
       }
@@ -384,26 +392,34 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
     const [audioUrl, setAudioUrl] = useState(null);
 
     useEffect(() => {
-      const fetchPodcast = async () => {
-        try {
-          const res = await fetch(`${endpoint}/fetch/podcast/${docKey}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `bearer ${localStorage.getItem("token")}`,
-            },
-          });
-          if (!res.ok) throw new Error("Failed to fetch podcast");
-          const blob = await res.blob();
-          setAudioUrl(URL.createObjectURL(blob));
-        } catch (err) {
-          console.error("Error fetching podcast:", err);
+      const fetchAudio = async () => {
+        if (isViewModalOpen && currentViewNote?.docType === "Podcast") {
+          const docKey = currentViewNote.docKey;
+          if (podcastCache[docKey]) return; // already cached
+
+          try {
+            const res = await fetch(`${endpoint}/fetch/podcast/${docKey}`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `bearer ${localStorage.getItem("token")}`,
+              },
+            });
+            if (!res.ok) throw new Error("Failed to fetch podcast");
+
+            const blob = await res.blob();
+            const audioUrl = URL.createObjectURL(blob);
+            setPodcastCache((prev) => ({ ...prev, [docKey]: audioUrl }));
+          } catch (err) {
+            console.error("Error fetching podcast:", err);
+          }
         }
       };
 
-      fetchPodcast();
-    }, [docKey]);
+      fetchAudio();
+    }, [isViewModalOpen, currentViewNote, podcastCache, endpoint]);
 
+    //
     if (!audioUrl) {
       return (
         <div className="flex items-center gap-2 text-gray-500 text-xs">
@@ -451,7 +467,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                   Title: `Podcast - ${new Date().toLocaleString()}`,
                   Response: audioUrl,
                   editable: false,
-                  type: "Podcast",
+                  docType: "Podcast",
                 };
                 setNotes((prev) => [newNote, ...prev]);
               }}
@@ -486,33 +502,26 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                   </Button>
                 ))}
               </div>
-
-              {loadingStates.size > 0 && (
-                <div className="space-y-2 mt-3">
-                  {Array.from(loadingStates).map((loadingKey) => {
-                    const displayType = loadingKey.includes("-")
-                      ? loadingKey.split("-")[0]
-                      : loadingKey;
-                    return (
-                      <div
-                        key={loadingKey}
-                        className="border border-gray-200 rounded-lg p-4 flex items-center gap-2"
-                      >
-                        <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
-                        <span className="text-sm text-gray-700 animate-pulse">
-                          Generating {displayType}...
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
             </div>
           </div>
 
           <div className="flex-1 overflow-hidden pl-3 py-3">
             <ScrollArea className="h-full pr-2">
               <div className="space-y-3">
+                {/* Loading placeholders at the top */}
+                {Array.from(loadingStates).map((loadingKey) => (
+                  <div
+                    key={loadingKey}
+                    className="border border-gray-200 rounded-lg p-4 flex items-center gap-2"
+                  >
+                    <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
+                    <span className="text-sm text-gray-700 animate-pulse">
+                      Generating {loadingKey.split("-")[0]}...
+                    </span>
+                  </div>
+                ))}
+
+                {/* Notes list */}
                 {notes && notes.length > 0 ? (
                   notes.map((note, index) => (
                     <div
@@ -528,7 +537,6 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
 
                         {/* Actions */}
                         <div className="flex items-center gap-1">
-                          {/* Play Audio (only if NOT podcast) */}
                           {note.docType !== "Podcast" && (
                             <button
                               onClick={(e) => {
@@ -552,9 +560,7 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                             <PopoverTrigger asChild>
                               <Button
                                 className="p-0"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                }}
+                                onClick={(e) => e.stopPropagation()}
                               >
                                 <EllipsisVertical className="w-4 h-4" />
                               </Button>
@@ -588,7 +594,10 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                       {/* Note Content */}
                       <div className="text-[#555] text-xs sm:text-sm mt-2">
                         {note.docType === "Podcast" ? (
-                          <PodcastAudio docKey={note.docKey} />
+                          // <PodcastAudio docKey={note.docKey} />
+                          <div className="text-xs text-gray-500 italic">
+                            Podcast note. Open to play.
+                          </div>
                         ) : note.editable ? (
                           <ReactMarkdown
                             components={{
@@ -760,15 +769,30 @@ const CardThree = ({ notes, setNotes, selectedDocs, onCollapseChange }) => {
                 </div>
 
                 <div style={{ padding: "20px" }}>
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    components={renderers}
-                  >
-                    {(currentViewNote.Response || "")
-                      .replace(/\\n/g, "\n")
-                      .replace(/^"(.*)"$/, "$1")
-                      .replace(/^["']|["']$/g, "")}
-                  </ReactMarkdown>
+                  {currentViewNote.docType === "Podcast" ? (
+                    podcastCache[currentViewNote.docKey] ? (
+                      <audio
+                        controls
+                        src={podcastCache[currentViewNote.docKey]}
+                        className="w-full"
+                      />
+                    ) : (
+                      <div className="flex items-center gap-2 text-gray-500 text-sm">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Fetching audio…
+                      </div>
+                    )
+                  ) : (
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={renderers}
+                    >
+                      {(currentViewNote.Response || "")
+                        .replace(/\\n/g, "\n")
+                        .replace(/^"(.*)"$/, "$1")
+                        .replace(/^["']|["']$/g, "")}
+                    </ReactMarkdown>
+                  )}
                 </div>
               </div>
             </div>
